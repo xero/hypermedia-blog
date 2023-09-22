@@ -3,10 +3,12 @@
   "module": "src/index.ts",
   "type": "module",
   "devDependencies": {
+    "@types/mustache": "^4.2.2",
     "autoprefixer": "^10.4.15",
     "bun-types": "latest",
     "cssnano": "^6.0.1",
-		"htmx": "^0.0.2",
+    "htmx": "^0.0.2",
+    "mustache": "^4.2.0",
     "postcss": "^8.4.30",
     "postcss-cli": "^10.1.0",
     "postcss-import": "^15.1.0",
@@ -18,6 +20,6 @@
   },
   "scripts": {
     "css": "bun ./node_modules/postcss-cli/index.js -o ./dist/ui/theme.css ./src/ui/theme.css",
-		"start": "bun src/index.ts"
+    "start": "bun src/index.ts"
   }
 }

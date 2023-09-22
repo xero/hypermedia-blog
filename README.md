@@ -1,10 +1,12 @@
 # static blog
 
-building a static site generator using bun, htmx, and tailwindcss, and typescript.
+building a static site generator using bun, htmx, and tailwindcss, mustache, & typescript.
 
-> please note, i'm doing this project to learn these technologies. i'm probably doing it wrong.
+> please note, i'm doing this project to learn these technologies, so i'm probably doing it wrong.
 
 # ideas
+
+## nginx
 
 * have `nginx` append `.html` to urls
 * need a 404 handler
@@ -33,4 +35,5 @@ GET /:post                                 getPostByURL(s)
 * https://htmx.org/api
 * https://htmx.org/attributes/hx-push-url
 * https://www.nerdfonts.com/cheat-sheet
-
+* https://github.com/janl/mustache.js
+* http://mustache.github.io/mustache.5.html

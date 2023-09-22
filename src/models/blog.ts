@@ -23,7 +23,7 @@ export type BlogCats = {
 export type BlogTags = {
   name: string;
   url: string;
-  count?: number;
+  count: number;
 }[];
 
 /*   _           _ ___ ___  _        __
@@ -107,7 +107,7 @@ const getPostTagsByID = (post_id: number): BlogTags => {
   const results: any = db
     .query(
       `
-SELECT t.name, t.url
+SELECT t.name, t.url, t.tag_count as count
 FROM blog_meta m INNER JOIN blog_tags t
 ON m.meta_val = t.tag_id
 WHERE m.blog_id = $post_id AND m.meta_key = 'tag';
@@ -119,6 +119,7 @@ WHERE m.blog_id = $post_id AND m.meta_key = 'tag';
       {
         name: "",
         url: "",
+        count: 0,
       },
     ];
   }
@@ -163,6 +164,7 @@ ORDER BY url ASC;
       {
         name: "untagged",
         url: "untagged",
+				count: 0,
       },
     ];
   }

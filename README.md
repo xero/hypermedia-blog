@@ -1,32 +1,30 @@
-# xero.0w.nz
+# static blog
 
 testing bun, htmx, and tailwindcss
-
 
 # ideas
 
 * have `nginx` append `.html` to urls
+* need a 404 handler
 
 ## url structure
 
 ```
-GET /                                         blog->newest
-GET /page/:page                               blog->newest
-GET /tag/:tag                                   blog->tags
-GET /tag/:tag/page/:page                        blog->tags
-GET /category/:cat                        blog->categories
-GET /category/:cat/page/:page             blog->categories
-GET /category/:cat/:subcat             blog->subcategories
-GET /category/:cat/:subcat/page/:page  blog->subcategories
-GET /:post                                      blog->post
+GET /                                          getPosts(8,0)
+GET /page/:page                                getPosts(8,#)
+GET /tag/:tag                             getPostsByTag(s,0)
+GET /tag/:tag/page/:page                  getPostsByTag(s,#)
+GET /category/:cat                        getPostsByCat(s,0)
+GET /category/:cat/page/:page             getPostsByCat(s,#)
+GET /category/:cat/:subcat             getPostsBySubCat(s,s,0)
+GET /category/:cat/:subcat/page/:page  getPostsBySubCat(s,s,#)
+GET /:post                                 getPostByURL(s)
 ```
-
-# todo
-
-* typscript sqlite adapter
 
 # references
 
+* https://bun.sh/docs
+* https://bun.sh/docs/api/sqlite
 * https://tailwindcss.com/docs
 * https://tailwindcomponents.com/cheatsheet
 * https://htmx.org/docs

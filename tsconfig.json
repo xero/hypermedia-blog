@@ -14,7 +14,8 @@
 		"forceConsistentCasingInFileNames": true,
 		"allowJs": true,
 		"types": [
-			"bun-types"
+			"bun-types",
+			"mustache"
 		]
 	}
 }

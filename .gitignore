@@ -1,5 +1,6 @@
 # 𝙞𝙜𝙣𝙤𝙧𝙚 𝙢𝙚!🙈
 node_modules/
+src/models/db.sqlite
 *~
 .fuse_hidden*
 .directory

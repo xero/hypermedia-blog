@@ -1,6 +1,8 @@
 # static blog
 
-testing bun, htmx, and tailwindcss
+building a static site generator using bun, htmx, and tailwindcss, and typescript.
+
+> please note, i'm doing this project to learn these technologies. i'm probably doing it wrong.
 
 # ideas
 

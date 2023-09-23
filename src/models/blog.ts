@@ -30,6 +30,10 @@ export type BlogTags = {
  *  |_ | | |\ | /   |   |  / \ |\ | (_
  *  |  |_| | \| \_  |  _|_ \_/ | \| __)
  */
+const isEmpty = (val:any):boolean => {
+  return val && Object.keys(val).length === 0;
+}
+
 const getPostsRange = (limit: number, offset: number): BlogPost => {
   const results: any = db
     .query(
@@ -69,7 +73,7 @@ WHERE m.blog_id = $post_id AND m.meta_key = "category";
 `,
     )
     .all({ $post_id: post_id });
-  if (!results) {
+  if (isEmpty(results)) {
     return [
       {
         blog_cat_id: 0,
@@ -81,17 +85,17 @@ WHERE m.blog_id = $post_id AND m.meta_key = "category";
   return results;
 };
 
-const getPostMainCategory = (cat_id: number): BlogCats => {
+const getMainCategory = (cat_id: number): BlogCats => {
   const results: any = db
     .query(
       `
 SELECT blog_cat_id, name, url
 FROM blog_categories
-WHERE blog_cat_id = :cat_id LIMIT 0,1;
+WHERE blog_cat_id = $cat_id LIMIT 0,1;
 `,
     )
-    .all({ $cat_id: cat_id });
-  if (!results) {
+    .all({ $cat_id: Math.floor(cat_id) });
+  if (isEmpty(results)) {
     return [
       {
         blog_cat_id: 0,
@@ -114,7 +118,7 @@ WHERE m.blog_id = $post_id AND m.meta_key = 'tag';
 `,
     )
     .all({ $post_id: post_id });
-  if (!results) {
+  if (isEmpty(results)) {
     return [
       {
         name: "",
@@ -136,7 +140,7 @@ ORDER BY blog_cat_id ASC;
 `,
     )
     .all({});
-  if (!results) {
+  if (isEmpty(results)) {
     return [
       {
         blog_cat_id: 0,
@@ -159,7 +163,7 @@ ORDER BY url ASC;
 `,
     )
     .all({});
-  if (!results) {
+  if (isEmpty(results)) {
     return [
       {
         name: "untagged",
@@ -179,7 +183,8 @@ export const getPostAndMeta = (url: string) => {
   const post = getPostByURL(url);
   const cats = getPostCatsByID(post[0].post_id);
   const tags = getPostTagsByID(post[0].post_id);
-  return { post, meta: { tags, cats } };
+  const main = getMainCategory(cats[0].blog_cat_id);
+  return { post, meta: { tags, cats, main } };
 };
 
 export const getPosts = (limit: number, offset: number) => {
@@ -198,8 +203,8 @@ export const getPostTags = (id: number): BlogTags => {
   return getPostTagsByID(id);
 };
 
-export const getPostMainCat = (id: number): BlogCats => {
-  return getPostMainCategory(id);
+export const getMainCat = (id: number): BlogCats => {
+  return getMainCategory(id);
 };
 
 export const getCategories = (): BlogCats => {

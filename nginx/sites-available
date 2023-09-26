@@ -1,0 +1,24 @@
+server {
+	listen 80;
+	listen 443 ssl;
+	server_name xero.0w.nz;
+	include snippets/ssl.conf;
+	underscores_in_headers on;
+
+	set $loc dist;
+	if ($http_hx_request) {
+		set $loc dist/htmx;
+	}
+	root /home/www/xero.0w.nz/$loc;
+	index index.html;
+	error_page 404 /error.html;
+	error_page 500 502 503 504 /error.html;
+
+	location ~ /.well-known {
+		allow all;
+	}
+
+	location / {
+		try_files $uri $uri.html $uri/ index.html;
+	}
+}

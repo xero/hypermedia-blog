@@ -108,6 +108,7 @@ async function RenderSidebar(domain: string) {
 async function RenderTagPagePosts(
   domain: string,
   tag_id: number,
+  tag_url: string,
   limit: number,
   offset: number,
   total: number,
@@ -145,8 +146,7 @@ async function RenderTagPagePosts(
       },
     });
   });
-  DOM += pagination(domain, total, limit, current);
-  //total, per, current
+  DOM += pagination(`${domain}/tag/${tag_url}`, total, limit, current);
   return DOM;
 }
 async function RenderPagePosts(
@@ -189,7 +189,6 @@ async function RenderPagePosts(
     });
   });
   DOM += pagination(domain, total, limit, current);
-  //total, per, current
   return DOM;
 }
 
@@ -224,7 +223,28 @@ async function RenderPost(domain: string, data: BlogPost) {
     },
   });
 }
-
+async function SaveErrorPages(domain: string) {
+  const sidebar = await RenderSidebar(domain);
+  let errorHtml = await getFile("error");
+  const renderedError = Mustache.render(errorHtml, {
+    domain: domain
+  });
+  let mainHtml = await getFile("main");
+  const renderedHtml = Mustache.render(mainHtml, {
+    domain: domain,
+    keywords:
+      "blog, static site, bun, bun.sh, tailwindcss, htmx, xero, x-e.ro, 0w.nz, xero.style",
+    content: renderedError,
+    sidebar: sidebar,
+    footer: () => {
+      const year = new Date().getFullYear();
+      return `&nbsp; ${year} xero harrison`;
+    },
+  });
+  mkdirSync(`dist/htmx/`, { recursive: true });
+  Bun.write(`dist/htmx/error.html`, renderedError);
+  Bun.write(`dist/error.html`, renderedHtml);
+}
 async function SaveTagPage(
   domain: string,
   tag_url: string,
@@ -233,11 +253,12 @@ async function SaveTagPage(
   total: number,
   current: number,
 ) {
-  const tag_id:number = getTagByName(tag_url);
+  const tag_id: number = getTagByName(tag_url);
   const sidebar = await RenderSidebar(domain);
   const content = await RenderTagPagePosts(
     domain,
     tag_id,
+    tag_url,
     limit,
     offset,
     total,
@@ -245,28 +266,28 @@ async function SaveTagPage(
   );
   let mainHtml = await getFile("main");
 
+  const renderedHtml = Mustache.render(mainHtml, {
+    domain: domain,
+    keywords:
+      "blog, static site, bun, bun.sh, tailwindcss, htmx, xero, x-e.ro, 0w.nz, xero.style",
+    content: content,
+    sidebar: sidebar,
+    footer: () => {
+      const year = new Date().getFullYear();
+      return `&nbsp; ${year} xero harrison`;
+    },
+  });
   mkdirSync(`dist/htmx/tag/${tag_url}/page`, { recursive: true });
   mkdirSync(`dist/tag/${tag_url}/page`, { recursive: true });
 
   if (current == 1) {
-    Bun.write(`dist/htmx/tag/${tag_url}.html`, content);
+    Bun.write(`dist/htmx/tag/${tag_url}/index.html`, content);
+    Bun.write(`dist/tag/${tag_url}/index.html`, renderedHtml);
+		/* @todo: is this cheaper than nginix? */
+    Bun.write(`dist/tag/${tag_url}/page/index.html`, renderedHtml);
   }
   Bun.write(`dist/htmx/tag/${tag_url}/page/${current}.html`, content);
-
-  Bun.write(
-    `dist/tag/${tag_url}/page/${current}.html`,
-    Mustache.render(mainHtml, {
-      domain: domain,
-      keywords:
-        "blog, static site, bun, bun.sh, tailwindcss, htmx, xero, x-e.ro, 0w.nz, xero.style",
-      content: content,
-      sidebar: sidebar,
-      footer: () => {
-        const year = new Date().getFullYear();
-        return `&nbsp; ${year} xero harrison`;
-      },
-    }),
-  );
+  Bun.write(`dist/tag/${tag_url}/page/${current}.html`, renderedHtml);
 }
 
 async function SavePage(
@@ -350,3 +371,6 @@ export const generateTagPage = (
 ): void => {
   SaveTagPage(domain, tag_url, limit, offset, total, current);
 };
+export const generateErrorPages = (domain: string): void => {
+  SaveErrorPages(domain);
+}

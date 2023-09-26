@@ -1,4 +1,3 @@
-import { mkdirSync } from "fs";
 import {
   getPosts,
   getTagByName,
@@ -6,8 +5,16 @@ import {
   getTotalPostCount,
   getTotalPostCountByTag,
 } from "./models/blog.js";
-import { generatePage, generatePost, generateTagPage } from "./views/templ8.js";
+import {
+  generateErrorPages,
+  generatePage,
+  generatePost,
+  generateTagPage,
+} from "./views/templ8.js";
 
+function makeErrorPages() {
+  generateErrorPages("//xero.0w.nz");
+}
 function makePages() {
   const total: number = getTotalPostCount();
   const limit: number = 7;
@@ -31,12 +38,12 @@ function makePosts() {
 function makeTags() {
   const tags = getTags();
   tags.forEach((tag) => {
-		let limit = 7;
-		let current = 1;
-		let offset = 0;
+    let limit = 7;
+    let current = 1;
+    let offset = 0;
     let id = getTagByName(tag.url);
     let total = getTotalPostCountByTag(id);
-    let pages = total / limit;
+    let pages = Math.ceil(total / limit);
     while (current <= pages) {
       generateTagPage("//xero.0w.nz", tag.url, limit, offset, total, current);
       offset += limit;
@@ -44,6 +51,7 @@ function makeTags() {
     }
   });
 }
+makeErrorPages();
 makePages();
 makePosts();
 makeTags();

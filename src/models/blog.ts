@@ -1,19 +1,9 @@
-import { db, quit } from "./db.js";
+import { db, isEmpty, quit } from "./db.js";
 
 /*  ___     _   _  __
  *   | \_/ |_) |_ (_
  *   |  |  |   |_ __)
  */
-export type BlogPost = {
-  post_id: number;
-  url: string;
-  title: string;
-  subtitle: string;
-  excerpt: string;
-  content: string;
-  date: string;
-}[];
-
 export type BlogCats = {
   blog_cat_id: number;
   name: string;
@@ -26,14 +16,27 @@ export type BlogTags = {
   count: number;
 }[];
 
+export type BlogMeta = {
+  main: BlogCats;
+  cats: BlogCats;
+  tags: BlogTags;
+};
+
+export type BlogPost = {
+  post_id: number;
+  url: string;
+  title: string;
+  subtitle: string;
+  excerpt: string;
+  content: string;
+  date: number;
+  meta: BlogMeta;
+}[];
+
 /*   _           _ ___ ___  _        __
  *  |_ | | |\ | /   |   |  / \ |\ | (_
  *  |  |_| | \| \_  |  _|_ \_/ | \| __)
  */
-const isEmpty = (val:any):boolean => {
-  return val && Object.keys(val).length === 0;
-}
-
 const getPostsRange = (limit: number, offset: number): BlogPost => {
   const results: any = db
     .query(
@@ -152,7 +155,6 @@ ORDER BY blog_cat_id ASC;
   return results;
 };
 
-
 const getAllTags = (): BlogTags => {
   const results: any = db
     .query(
@@ -168,10 +170,74 @@ ORDER BY url ASC;
       {
         name: "untagged",
         url: "untagged",
-				count: 0,
+        count: 0,
       },
     ];
   }
+  return results;
+};
+const getPostsCount = (): number => {
+  const results = db
+    .query(
+      `
+SELECT post_id AS total
+FROM blog_posts
+WHERE live = 1;
+`,
+    )
+    .all({});
+  return results.length;
+};
+const getTagPostCount = (tag_id: number): number => {
+  const results = db
+    .query(
+      `
+SELECT blog_id as total
+FROM blog_meta
+WHERE meta_key = 'tag'
+AND meta_val = $tag_id;
+`,
+    )
+    .all({ $tag_id: tag_id });
+  return results.length;
+};
+const getTagByURL = (tag_name: string) => {
+  const results:any = db
+    .query(
+      `
+SELECT tag_id
+FROM blog_tags
+WHERE url = $tag_name
+LIMIT 1;",
+`,
+    )
+    .all({ $tag_name: tag_name });
+  return parseInt(results[0].tag_id);
+};
+
+const getPostsByTag = (
+  tag_id: number,
+  limit: number,
+  offset: number,
+) => {
+  const results = db
+    .query(
+      `
+SELECT p.post_id, p.url, p.title, p.subtitle, p.excerpt, p.content, p.date
+FROM blog_meta as m
+INNER JOIN blog_posts as p
+ON m.blog_id = p.post_id
+WHERE m.meta_key = 'tag' AND m.meta_val = $tag_id AND p.live = 1
+GROUP BY p.post_id
+ORDER BY p.date
+DESC LIMIT $offset, $limit;",
+`,
+    )
+    .all({
+      $tag_id: tag_id,
+      $limit: limit,
+      $offset: offset
+    });
   return results;
 };
 
@@ -179,16 +245,38 @@ ORDER BY url ASC;
  *  |_ \/ |_) / \ |_) | (_
  *  |_ /\ |   \_/ | \ | __)
  */
-export const getPostAndMeta = (url: string) => {
-  const post = getPostByURL(url);
-  const cats = getPostCatsByID(post[0].post_id);
-  const tags = getPostTagsByID(post[0].post_id);
-  const main = getMainCategory(cats[0].blog_cat_id);
-  return { post, meta: { tags, cats, main } };
+export const getPosts = (limit: number, offset: number): BlogPost => {
+  let posts = getPostsRange(limit, offset);
+  posts.forEach((post) => {
+    const cats = getPostCatsByID(post.post_id);
+    const tags = getPostTagsByID(post.post_id);
+    const main = getMainCategory(cats[0].blog_cat_id);
+    post.meta = { cats, tags, main };
+  });
+  return posts;
 };
 
-export const getPosts = (limit: number, offset: number) => {
-  return getPostsRange(limit, offset);
+export const getPostsByTagID = (tag_id: number, limit: number, offset: number) => {
+  let posts = getPostsByTag(tag_id, limit, offset);
+  posts.forEach((post:any) => {
+    const cats = getPostCatsByID(post.post_id);
+    const tags = getPostTagsByID(post.post_id);
+    const main = getMainCategory(cats[0].blog_cat_id);
+    post.meta = { cats, tags, main };
+  });
+  return posts;
+}
+
+export const getTotalPostCountByTag = (tag_id: number) => {
+  return getTagPostCount(tag_id);
+}
+
+export const getTagByName = (url: string):number => {
+  return getTagByURL(url);
+}
+
+export const getTotalPostCount = (): number => {
+  return getPostsCount();
 };
 
 export const getPost = (url: string): BlogPost => {

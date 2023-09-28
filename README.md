@@ -1,29 +1,28 @@
 # static blog
 
-building a static site generator using bun, htmx, and tailwindcss, mustache, & typescript.
+building a static site generator using sqlite, bun, htmx, and tailwindcss, mustache, & typescript.
 
 > please note, i'm doing this project to learn these technologies, so i'm probably doing it wrong.
 
-# ideas
+## status
 
-## nginx
+demo build at [https://xero.0w.nz](https://xero.0w.nz)
 
-* have `nginx` append `.html` to urls
-* need a 404 handler
+core features are working. acutal posts need more formatting. that being said, project is active wip, so it my be broken at any time.
 
-## url structure
+## todo & ideas
 
-```
-GET /                                          getPosts(8,0)
-GET /page/:page                                getPosts(8,#)
-GET /tag/:tag                             getPostsByTag(s,0)
-GET /tag/:tag/page/:page                  getPostsByTag(s,#)
-GET /category/:cat                        getPostsByCat(s,0)
-GET /category/:cat/page/:page             getPostsByCat(s,#)
-GET /category/:cat/:subcat             getPostsBySubCat(s,s,0)
-GET /category/:cat/:subcat/page/:page  getPostsBySubCat(s,s,#)
-GET /:post                                 getPostByURL(s)
-```
+* htmx loading indicators
+* fix max pagination
+* global vars for things like domain
+* optimizations. esp in the view templ8
+* database
+    * post cleanup (blockquotes, code, image urls, etc)
+    * house keeping (unused columns like comments)
+* `bun edit` for a local web wysiwyg editor?
+* nginx alternatives (e.g. [caddy](https://caddyserver.com/docs/caddyfile/matchers))
+    * nginx hx-header "root rewrite" vs inline hx-get to slug urls perf testing
+* idk, maybe actually blogging?  •͡˘㇁•͡
 
 # references
 

@@ -13,6 +13,7 @@ export default {
       snow: "#d0d0d0",
       white: "#c0c0c0",
       blue: "#68a",
+      green: "#b1d631",
     },
   },
   plugins: [],

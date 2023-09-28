@@ -13,9 +13,9 @@ import {
   getCategoryByID,
 } from "../models/blog.js";
 
-/*   _           _ ___ ___  _        __
- *  |_ | | |\ | /   |   |  / \ |\ | (_
- *  |  |_| | \| \_  |  _|_ \_/ | \| __)
+/*   _           _ ___    _        __
+ *  |_ | | |\ | /   |  | / \ |\ | (_
+ *  |  |_| | \| \_  |  | \_/ | \| __)
  */
 function tagCloud(min: number, max: number, domain: string): string {
   let tags: BlogTags = getTags();
@@ -362,7 +362,9 @@ async function SaveErrorPages(domain: string) {
     domain: domain,
   });
   let mainHtml = await getFile("main");
+
   const renderedHtml = Mustache.render(mainHtml, {
+		ripcache: Date.now(),
     domain: domain,
     keywords:
       "blog, static site, bun, bun.sh, tailwindcss, htmx, xero, x-e.ro, 0w.nz, xero.style",
@@ -370,7 +372,7 @@ async function SaveErrorPages(domain: string) {
     sidebar: sidebar,
     footer: () => {
       const year = new Date().getFullYear();
-      return `&nbsp; ${year} xero harrison`;
+      return `${year} xero harrison`;
     },
   });
   mkdirSync(`dist/htmx/`, { recursive: true });
@@ -400,6 +402,7 @@ async function SaveCatPage(
   let mainHtml = await getFile("main");
 
   const renderedHtml = Mustache.render(mainHtml, {
+		ripcache: Date.now(),
     domain: domain,
     keywords:
       "blog, static site, bun, bun.sh, tailwindcss, htmx, xero, x-e.ro, 0w.nz, xero.style",
@@ -407,7 +410,7 @@ async function SaveCatPage(
     sidebar: sidebar,
     footer: () => {
       const year = new Date().getFullYear();
-      return `&nbsp; ${year} xero harrison`;
+      return `${year} xero harrison`;
     },
   });
   mkdirSync(`dist/htmx/category/${cat_url}/page`, { recursive: true });
@@ -445,6 +448,7 @@ async function SaveSubCatPage(
   let mainHtml = await getFile("main");
 
   const renderedHtml = Mustache.render(mainHtml, {
+		ripcache: Date.now(),
     domain: domain,
     keywords:
       "blog, static site, bun, bun.sh, tailwindcss, htmx, xero, x-e.ro, 0w.nz, xero.style",
@@ -452,7 +456,7 @@ async function SaveSubCatPage(
     sidebar: sidebar,
     footer: () => {
       const year = new Date().getFullYear();
-      return `&nbsp; ${year} xero harrison`;
+      return `${year} xero harrison`;
     },
   });
 
@@ -512,6 +516,7 @@ async function SaveTagPage(
   let mainHtml = await getFile("main");
 
   const renderedHtml = Mustache.render(mainHtml, {
+		ripcache: Date.now(),
     domain: domain,
     keywords:
       "blog, static site, bun, bun.sh, tailwindcss, htmx, xero, x-e.ro, 0w.nz, xero.style",
@@ -519,7 +524,7 @@ async function SaveTagPage(
     sidebar: sidebar,
     footer: () => {
       const year = new Date().getFullYear();
-      return `&nbsp; ${year} xero harrison`;
+      return `${year} xero harrison`;
     },
   });
   mkdirSync(`dist/htmx/tag/${tag_url}/page`, { recursive: true });
@@ -545,7 +550,9 @@ async function SavePage(
   const sidebar = await RenderSidebar(domain);
   const content = await RenderPagePosts(domain, limit, offset, total, current);
   let mainHtml = await getFile("main");
+
   const renderedHtml = Mustache.render(mainHtml, {
+		ripcache: Date.now(),
     domain: domain,
     keywords:
       "blog, static site, bun, bun.sh, tailwindcss, htmx, xero, x-e.ro, 0w.nz, xero.style",
@@ -553,7 +560,7 @@ async function SavePage(
     sidebar: sidebar,
     footer: () => {
       const year = new Date().getFullYear();
-      return `&nbsp; ${year} xero harrison`;
+      return `${year} xero harrison`;
     },
   });
   mkdirSync(`dist/page`, { recursive: true });
@@ -578,6 +585,7 @@ async function SavePost(domain: string, data: BlogPost) {
   Bun.write(
     `dist/${file}.html`,
     Mustache.render(mainHtml, {
+		ripcache: Date.now(),
       domain: domain,
       keywords:
         "blog, static site, bun, bun.sh, tailwindcss, htmx, xero, x-e.ro, 0w.nz, xero.style",
@@ -585,7 +593,7 @@ async function SavePost(domain: string, data: BlogPost) {
       sidebar: sidebar,
       footer: () => {
         const year = new Date().getFullYear();
-        return `&nbsp; ${year} xero harrison`;
+        return `${year} xero harrison`;
       },
     }),
   );

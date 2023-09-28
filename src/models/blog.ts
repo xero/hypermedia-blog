@@ -33,9 +33,9 @@ export type BlogPost = {
   meta: BlogMeta;
 }[];
 
-/*   _           _ ___ ___  _        __
- *  |_ | | |\ | /   |   |  / \ |\ | (_
- *  |  |_| | \| \_  |  _|_ \_/ | \| __)
+/*   _           _ ___    _        __
+ *  |_ | | |\ | /   |  | / \ |\ | (_
+ *  |  |_| | \| \_  |  | \_/ | \| __)
  */
 const getPostsRange = (limit: number, offset: number): BlogPost => {
   const results: any = db

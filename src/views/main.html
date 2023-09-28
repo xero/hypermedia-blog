@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<!--
+	<!--
       ┐ │ ┬─┐ ┬─┐┌─┐
       ┌┼┘─├─  │┬┘│ │
       ┆ └ ┴─┘o┆└┘┘─┘
@@ -24,7 +24,7 @@
 	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{&domain}}/ui/ico/icon-72.png">
 	<link rel="apple-touch-icon-precomposed" sizes="57x57" href="{{&domain}}/ui/ico/icon-57.png">
 	<link rel="apple-touch-icon-precomposed" sizes="16x16" href="{{&domain}}/ui/ico/icon-16.png">
-	<link rel="stylesheet" type="text/css" href="{{&domain}}/ui/theme.css">
+	<link rel="stylesheet" type="text/css" href="{{&domain}}/ui/theme.css?{{&ripcache}}">
 	<link rel="stylesheet" type="text/css" href="{{&domain}}/ui/hack.css">
 	<script src="{{&domain}}/ui/htmx.js"></script>
 	<meta name="htmx-config" content='{"selfRequestsOnly":"true"}'>
@@ -48,7 +48,7 @@
 		</nav>
 	</header>
 
-	<section id="main" hx-boost="true" hx-push-url="true" hx-target="#content">
+	<main id="main" hx-boost="true" hx-push-url="true" hx-target="#content" hx-indicator="#loading">
 		<section id="content">
 			{{&content}}
 		</section>
@@ -56,6 +56,11 @@
 		<aside>
 			{{&sidebar}}
 		</aside>
+	</main>
+
+	<section id="loading" class="htmx-indicator">
+		<img src="//xero.0w.nz/ui/img/metroid-super.gif" alt="loading..." title="loading..." />
+		<h1>loading...</h1>
 	</section>
 
 	<footer>
@@ -65,7 +70,7 @@
 			{{&footer}}
 			<img src="{{&domain}}/ui/img/metroid-larva.gif" id="metroid-larva" alt="metroid-larva">
 			<img src="{{&domain}}/ui/img/metroid.gif" id="metroid" alt="metroid">
-<!--
+			<!--
  .___.
 /  @  \
 \ @ @ /

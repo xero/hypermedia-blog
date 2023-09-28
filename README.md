@@ -12,10 +12,9 @@ core features are working. acutal posts need more formatting. that being said, p
 
 ## todo & ideas
 
-* htmx loading indicators
 * fix max pagination
-* global vars for things like domain
 * optimizations. esp in the view templ8
+* dynamic meta descript tags
 * database
     * post cleanup (blockquotes, code, image urls, etc)
     * house keeping (unused columns like comments)

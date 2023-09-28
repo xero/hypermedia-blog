@@ -32,91 +32,91 @@ body {
 .notes.title,
 .random.title,
 .uncategorized.title {
-  color: #d0d0d0;
+  @apply text-snow;
 }
 .code a,
 .code h2 a,
 .code h3 a,
 .code.nf-md-folder_multiple,
 .code.title:hover {
-  color: #b1d631;
+  @apply text-lime;
 }
 .code a:hover,
 .code h2 a:hover,
 .code h3 a:hover,
 .code.nf-md-folder_multiple:hover,
 .code.title:hover:hover {
-  color: #719611;
+  @apply text-green;
 }
 .lab a,
 .lab h2 a,
 .lab h3 a,
 .lab.nf-md-folder_multiple,
 .lab.title:hover {
-  color: #8181a6;
+  @apply text-purp;
 }
 .lab a:hover,
 .lab h2 a:hover,
 .lab h3 a:hover,
 .lab.nf-md-folder_multiple:hover,
 .lab.title:hover:hover {
-  color: #8f6f8f;
+  @apply text-lavender;
 }
 .art a,
 .art h2 a,
 .art h3 a,
 .art.nf-md-folder_multiple,
 .art.title:hover {
-  color: #90b0d1;
+  @apply text-mainlyblue;
 }
 .art a:hover,
 .art h2 a:hover,
 .art h3 a:hover,
 .art.nf-md-folder_multiple:hover,
 .art.title:hover:hover {
-  color: #68a;
+  @apply text-blue;
 }
 .entertainment a,
 .entertainment h2 a,
 .entertainment h3 a,
 .entertainment.nf-md-folder_multiple,
 .entertainment.title:hover {
-  color: #aa4450;
+  @apply text-crimson;
 }
 .entertainment a:hover,
 .entertainment h2 a:hover,
 .entertainment h3 a:hover,
 .entertainment.nf-md-folder_multiple:hover,
 .entertainment.title:hover:hover {
-  color: #ff6a6a;
+  @apply text-red;
 }
 .random a,
 .random h2 a,
 .random h3 a,
 .random.nf-md-folder_multiple,
 .random.title:hover {
-  color: #ff9800;
+  @apply text-pumpkin;
 }
 .random a:hover,
 .random h2 a:hover,
 .random h3 a:hover,
 .random.nf-md-folder_multiple:hover,
 .random.title:hover:hover {
-  color: #c80;
+  @apply text-orange;
 }
 .notes a,
 .notes h2 a,
 .notes h3 a,
 .notes.nf-md-folder_multiple,
 .notes.title:hover {
-  color: #87ceeb;
+  @apply text-skyblue;
 }
 .notes a:hover,
 .notes h2 a:hover,
 .notes h3 a:hover,
 .notes.nf-md-folder_multiple:hover,
 .notes.title:hover:hover {
-  color: #528b8b;
+  @apply text-slate;
 }
 .uncategorized a,
 .uncategorized a:hover,
@@ -126,7 +126,7 @@ body {
 .uncategorized h3 a:hover,
 .uncategorized.title:hover .uncategorized.nf-md-folder_multiple,
 .uncategorized.title:hover .uncategorized.nf-md-folder_multiple:hover {
-  color: #000;
+  @apply text-midnight;
 }
 
 header {
@@ -136,15 +136,13 @@ header {
     background-size: 120% auto;
     min-height: 74px;
     overflow: auto;
-    border-bottom: 2px solid #c0c0c0;
-    @apply pixelated;
+    @apply pixelated border-b-2 border-b-white border-solid;
 
     #menu {
       @apply block float-right mr-8 text-5xl pt-3 text-white clear-both;
     }
     #linx {
-      @apply h-fit list-none z-50 hidden;
-      border-top: 2px solid #c0c0c0;
+      @apply h-fit list-none z-50 hidden border-t-2 border-solid border-t-white;
 
       li {
         @apply p-2 block text-left bg-grey;
@@ -190,18 +188,17 @@ header {
 }
 
 #loading {
-  @apply fixed block p-3;
+  @apply fixed block p-3 ml-8;
   background: #222 url(img/hash.png);
-	z-index: 999;
+  z-index: 999;
   top: 10px;
-	margin-left: 2rem;
 
   h1,
   img {
     @apply float-left;
   }
   h1 {
-    @apply pt-6 pl-2 text-green text-xl font-bold;
+    @apply pt-6 pl-2 text-lime text-xl font-bold;
   }
 }
 
@@ -210,7 +207,7 @@ header {
 
   #content {
     @apply flex flex-col basis-full;
-		transition: all ease-in 2s;
+    transition: all ease-in 2s;
 
     article {
       header {
@@ -320,7 +317,7 @@ header {
       }
       li a:hover,
       li.highlight {
-        border-bottom: 1px solid #90b0d1;
+        @apply border-b-mainlyblue border-b;
       }
       li a {
         @apply whitespace-nowrap no-underline text-white;
@@ -468,11 +465,11 @@ footer {
     }
   }
 
-	#loading {
-		h1 {
-			@apply text-2xl;
-		}
-	}
+  #loading {
+    h1 {
+      @apply text-2xl;
+    }
+  }
 
   #main {
     @apply !m-6 !px-2 !py-10;
@@ -582,11 +579,11 @@ footer {
     }
   }
 
-	#loading {
-		h1 {
-			@apply text-3xl;
-		}
-	}
+  #loading {
+    h1 {
+      @apply text-3xl;
+    }
+  }
 
   #main {
     @apply !m-6 !px-2 !py-10;

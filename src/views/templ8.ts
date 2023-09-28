@@ -7,6 +7,10 @@ import {
   BlogPost,
   getPostsByTagID,
   getTagByName,
+  getPostsByCatID,
+  getPostsBySubCatID,
+  getCatByName,
+  getCategoryByID,
 } from "../models/blog.js";
 
 /*   _           _ ___ ___  _        __
@@ -89,6 +93,7 @@ function pagination(
   }
   return `<nav class="pagination"><ul>${DOM}</ul></nav>`;
 }
+
 async function getFile(file: string) {
   return Bun.file(`src/views/${file}.html`, {
     type: "text/html;charset=utf-8",
@@ -103,6 +108,115 @@ async function RenderSidebar(domain: string) {
   let sidebarHtml = await getFile("sidebar");
   sidebar += Mustache.render(sidebarHtml, { domain: domain });
   return sidebar;
+}
+
+async function RenderCatPagePosts(
+  domain: string,
+  cat_id: number,
+  cat_url: string,
+  limit: number,
+  offset: number,
+  total: number,
+  current: number,
+) {
+  const data = getPostsByCatID(cat_id, limit, offset);
+  const postHtml = await getFile("preview");
+  let DOM: string = "";
+  data.forEach((post: any) => {
+    const postDate = new Date(post.date * 1000);
+    DOM += Mustache.render(postHtml, {
+      domain: domain,
+      url: post.url,
+      title: post.title,
+      content: post.excerpt,
+      mainCat: post.meta.main[0].url,
+      mainCatUrl: post.meta.main[0].url,
+      subtitle: post.subtitle,
+      day: postDate.getDate(),
+      month: postDate.toLocaleString("default", { month: "short" }),
+      year: postDate.getFullYear(),
+      tagList: () => {
+        let list = "";
+        post.meta.tags.forEach((tag: any) => {
+          list += `<a href="${domain}/tag/${tag.url}">${tag.name}</a>, `;
+        });
+        return list.slice(0, -2);
+      },
+      catList: () => {
+        let list = "";
+        post.meta.cats.forEach((cat: any) => {
+          if (cat.blog_cat_id.toString().includes(".")) {
+            const parentID: number = Math.floor(cat.blog_cat_id);
+            const parent = getCategoryByID(parentID);
+            list += `<a href="${domain}/category/${parent[0].url}">${parent[0].name}</a>/<a href="${domain}/category/${parent[0].url}/${cat.url}">${cat.name}</a>, `;
+          } else {
+            list += `<a href="${domain}/category/${cat.url}">${cat.name}</a>, `;
+          }
+        });
+        return list.slice(0, -2);
+      },
+    });
+  });
+  DOM += pagination(`${domain}/category/${cat_url}`, total, limit, current);
+  return DOM;
+}
+
+async function RenderSubCatPagePosts(
+  domain: string,
+  subcat_id: number,
+  subcat_url: string,
+  limit: number,
+  offset: number,
+  total: number,
+  current: number,
+) {
+  const data = getPostsBySubCatID(subcat_id, limit, offset);
+  const postHtml = await getFile("preview");
+  let DOM: string = "";
+  data.forEach((post: any) => {
+    const postDate = new Date(post.date * 1000);
+    DOM += Mustache.render(postHtml, {
+      domain: domain,
+      url: post.url,
+      title: post.title,
+      content: post.excerpt,
+      mainCat: post.meta.main[0].url,
+      mainCatUrl: post.meta.main[0].url,
+      subtitle: post.subtitle,
+      day: postDate.getDate(),
+      month: postDate.toLocaleString("default", { month: "short" }),
+      year: postDate.getFullYear(),
+      tagList: () => {
+        let list = "";
+        post.meta.tags.forEach((tag: any) => {
+          list += `<a href="${domain}/tag/${tag.url}">${tag.name}</a>, `;
+        });
+        return list.slice(0, -2);
+      },
+      catList: () => {
+        let list = "";
+        post.meta.cats.forEach((cat: any) => {
+          if (cat.blog_cat_id.toString().includes(".")) {
+            const parentID: number = Math.floor(cat.blog_cat_id);
+            const parent = getCategoryByID(parentID);
+            list += `<a href="${domain}/category/${parent[0].url}">${parent[0].name}</a>/<a href="${domain}/category/${parent[0].url}/${cat.url}">${cat.name}</a>, `;
+          } else {
+            list += `<a href="${domain}/category/${cat.url}">${cat.name}</a>, `;
+          }
+        });
+        return list.slice(0, -2);
+      },
+    });
+  });
+  const parentID: number = Math.floor(subcat_id);
+  const parent = getCategoryByID(parentID);
+  DOM += pagination(
+    `${domain}/category/${parent[0].url}/${subcat_url}`,
+    total,
+    limit,
+    current,
+  );
+  return DOM;
 }
 
 async function RenderTagPagePosts(
@@ -133,16 +247,22 @@ async function RenderTagPagePosts(
       tagList: () => {
         let list = "";
         post.meta.tags.forEach((tag: any) => {
-          list += `<a href="${domain}/tag/${tag.url}">${tag.name}</a>,`;
+          list += `<a href="${domain}/tag/${tag.url}">${tag.name}</a>, `;
         });
-        return list.slice(0, -1);
+        return list.slice(0, -2);
       },
       catList: () => {
         let list = "";
         post.meta.cats.forEach((cat: any) => {
-          list += `<a href="${domain}/tag/${cat.url}">${cat.name}</a>,`;
+          if (cat.blog_cat_id.toString().includes(".")) {
+            const parentID: number = Math.floor(cat.blog_cat_id);
+            const parent = getCategoryByID(parentID);
+            list += `<a href="${domain}/category/${parent[0].url}">${parent[0].name}</a>/<a href="${domain}/category/${parent[0].url}/${cat.url}">${cat.name}</a>, `;
+          } else {
+            list += `<a href="${domain}/category/${cat.url}">${cat.name}</a>, `;
+          }
         });
-        return list.slice(0, -1);
+        return list.slice(0, -2);
       },
     });
   });
@@ -175,16 +295,22 @@ async function RenderPagePosts(
       tagList: () => {
         let list = "";
         post.meta.tags.forEach((tag) => {
-          list += `<a href="${domain}/tag/${tag.url}">${tag.name}</a>,`;
+          list += `<a href="${domain}/tag/${tag.url}">${tag.name}</a>, `;
         });
-        return list.slice(0, -1);
+        return list.slice(0, -2);
       },
       catList: () => {
         let list = "";
         post.meta.cats.forEach((cat) => {
-          list += `<a href="${domain}/tag/${cat.url}">${cat.name}</a>,`;
+          if (cat.blog_cat_id.toString().includes(".")) {
+            const parentID: number = Math.floor(cat.blog_cat_id);
+            const parent = getCategoryByID(parentID);
+            list += `<a href="${domain}/category/${parent[0].url}">${parent[0].name}</a>/<a href="${domain}/category/${parent[0].url}/${cat.url}">${cat.name}</a>, `;
+          } else {
+            list += `<a href="${domain}/category/${cat.url}">${cat.name}</a>, `;
+          }
         });
-        return list.slice(0, -1);
+        return list.slice(0, -2);
       },
     });
   });
@@ -210,16 +336,22 @@ async function RenderPost(domain: string, data: BlogPost) {
     tagList: () => {
       let list = "";
       post.meta.tags.forEach((tag) => {
-        list += `<a href="${domain}/tag/${tag.url}">${tag.name}</a>,`;
+        list += `<a href="${domain}/tag/${tag.url}">${tag.name}</a>, `;
       });
-      return list.slice(0, -1);
+      return list.slice(0, -2);
     },
     catList: () => {
       let list = "";
       post.meta.cats.forEach((cat) => {
-        list += `<a href="${domain}/tag/${cat.url}">${cat.name}</a>,`;
+          if (cat.blog_cat_id.toString().includes(".")) {
+            const parentID: number = Math.floor(cat.blog_cat_id);
+            const parent = getCategoryByID(parentID);
+            list += `<a href="${domain}/category/${parent[0].url}">${parent[0].name}</a>/<a href="${domain}/category/${parent[0].url}/${cat.url}">${cat.name}</a>, `;
+          } else {
+            list += `<a href="${domain}/category/${cat.url}">${cat.name}</a>, `;
+          }
       });
-      return list.slice(0, -1);
+      return list.slice(0, -2);
     },
   });
 }
@@ -227,7 +359,7 @@ async function SaveErrorPages(domain: string) {
   const sidebar = await RenderSidebar(domain);
   let errorHtml = await getFile("error");
   const renderedError = Mustache.render(errorHtml, {
-    domain: domain
+    domain: domain,
   });
   let mainHtml = await getFile("main");
   const renderedHtml = Mustache.render(mainHtml, {
@@ -245,6 +377,119 @@ async function SaveErrorPages(domain: string) {
   Bun.write(`dist/htmx/error.html`, renderedError);
   Bun.write(`dist/error.html`, renderedHtml);
 }
+
+async function SaveCatPage(
+  domain: string,
+  cat_url: string,
+  limit: number,
+  offset: number,
+  total: number,
+  current: number,
+) {
+  const cat_id: number = getCatByName(cat_url);
+  const sidebar = await RenderSidebar(domain);
+  const content = await RenderCatPagePosts(
+    domain,
+    cat_id,
+    cat_url,
+    limit,
+    offset,
+    total,
+    current,
+  );
+  let mainHtml = await getFile("main");
+
+  const renderedHtml = Mustache.render(mainHtml, {
+    domain: domain,
+    keywords:
+      "blog, static site, bun, bun.sh, tailwindcss, htmx, xero, x-e.ro, 0w.nz, xero.style",
+    content: content,
+    sidebar: sidebar,
+    footer: () => {
+      const year = new Date().getFullYear();
+      return `&nbsp; ${year} xero harrison`;
+    },
+  });
+  mkdirSync(`dist/htmx/category/${cat_url}/page`, { recursive: true });
+  mkdirSync(`dist/category/${cat_url}/page`, { recursive: true });
+
+  if (current == 1) {
+    Bun.write(`dist/htmx/category/${cat_url}/index.html`, content);
+    Bun.write(`dist/category/${cat_url}/index.html`, renderedHtml);
+    /* @todo: is this cheaper than nginix? */
+    Bun.write(`dist/category/${cat_url}/page/index.html`, renderedHtml);
+  }
+  Bun.write(`dist/htmx/category/${cat_url}/page/${current}.html`, content);
+  Bun.write(`dist/category/${cat_url}/page/${current}.html`, renderedHtml);
+}
+
+async function SaveSubCatPage(
+  domain: string,
+  subcat_url: string,
+  subcat_id: number,
+  limit: number,
+  offset: number,
+  total: number,
+  current: number,
+) {
+  const sidebar = await RenderSidebar(domain);
+  const content = await RenderSubCatPagePosts(
+    domain,
+    subcat_id,
+    subcat_url,
+    limit,
+    offset,
+    total,
+    current,
+  );
+  let mainHtml = await getFile("main");
+
+  const renderedHtml = Mustache.render(mainHtml, {
+    domain: domain,
+    keywords:
+      "blog, static site, bun, bun.sh, tailwindcss, htmx, xero, x-e.ro, 0w.nz, xero.style",
+    content: content,
+    sidebar: sidebar,
+    footer: () => {
+      const year = new Date().getFullYear();
+      return `&nbsp; ${year} xero harrison`;
+    },
+  });
+
+  const parentID: number = Math.floor(subcat_id);
+  const parent = getCategoryByID(parentID);
+  const cat_url = parent[0].url;
+
+  mkdirSync(`dist/htmx/category/${cat_url}/${subcat_url}/page`, {
+    recursive: true,
+  });
+  mkdirSync(`dist/category/${cat_url}/${subcat_url}/page`, { recursive: true });
+
+  if (current == 1) {
+    Bun.write(
+      `dist/htmx/category/${cat_url}/${subcat_url}/index.html`,
+      content,
+    );
+    Bun.write(
+      `dist/category/${cat_url}/${subcat_url}/index.html`,
+      renderedHtml,
+    );
+    /* @todo: is this cheaper than nginix? */
+    Bun.write(
+      `dist/category/${cat_url}/${subcat_url}/page/index.html`,
+      renderedHtml,
+    );
+  }
+  Bun.write(
+    `dist/htmx/category/${cat_url}/${subcat_url}/page/${current}.html`,
+    content,
+  );
+  Bun.write(
+    `dist/category/${cat_url}/${subcat_url}/page/${current}.html`,
+    renderedHtml,
+  );
+}
+
 async function SaveTagPage(
   domain: string,
   tag_url: string,
@@ -283,7 +528,7 @@ async function SaveTagPage(
   if (current == 1) {
     Bun.write(`dist/htmx/tag/${tag_url}/index.html`, content);
     Bun.write(`dist/tag/${tag_url}/index.html`, renderedHtml);
-		/* @todo: is this cheaper than nginix? */
+    /* @todo: is this cheaper than nginix? */
     Bun.write(`dist/tag/${tag_url}/page/index.html`, renderedHtml);
   }
   Bun.write(`dist/htmx/tag/${tag_url}/page/${current}.html`, content);
@@ -371,6 +616,27 @@ export const generateTagPage = (
 ): void => {
   SaveTagPage(domain, tag_url, limit, offset, total, current);
 };
+export const generateCatPage = (
+  domain: string,
+  cat_url: string,
+  limit: number,
+  offset: number,
+  total: number,
+  current: number,
+): void => {
+  SaveCatPage(domain, cat_url, limit, offset, total, current);
+};
+export const generateSubCatPage = (
+  domain: string,
+  subcat_url: string,
+  subcat_id: number,
+  limit: number,
+  offset: number,
+  total: number,
+  current: number,
+): void => {
+  SaveSubCatPage(domain, subcat_url, subcat_id, limit, offset, total, current);
+};
 export const generateErrorPages = (domain: string): void => {
   SaveErrorPages(domain);
-}
+};

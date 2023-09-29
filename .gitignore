@@ -1,7 +1,7 @@
 # 𝙞𝙜𝙣𝙤𝙧𝙚 𝙢𝙚!🙈
 node_modules/
-src/models/db.sqlite
 dist/
+src/ui/img/blog/
 src/ui/old.css
 *~
 .fuse_hidden*

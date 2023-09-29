@@ -1,27 +1,54 @@
 # static blog
 
-building a static site generator using sqlite, bun, htmx, and tailwindcss, mustache, & typescript.
+### what are you doing?
+
+i'm rebuild my website using the "islands" pattern. taking a database driven site and converting it to a static  ｈｙｐｅｒｍｅｄｉａ site generator using sqlite, bun, htmx, and tailwindcss, mustache, & typescript.
 
 > please note, i'm doing this project to learn these technologies, so i'm probably doing it wrong.
 
-## status
+## how does it work?
+
+the scripts loops through the database creating both fully rendered html documents and dom snippets for every page on the site. nginx reads requests and will serve one or the other based on the existence of the `hx-request` header.
+`hx-boost` is employed to automatically hoist all anchor tags to ajax requests, making the magic happen. the response documents contain `<title>` tags which htmx recognizes and applies to the page for better UX & SEO.
+
+### building
+
+all build commands are run using bun.
+
+* `bun install` will pull down all the required dependencies.
+* `bun init` builds the `dist` folder which will contain the rendered site. (also moves files into place)
+* `bun htmx` will run the typescript to actually generate the site.
+* `bun css` runs the postcss scripts to generate & optimize the site's styling using tailwindscss.
+* `bun start` runs all three commands.
+
+### data
+
+the site's content is generated from a 4 table [sqlite database](https://github.com/xero/static-blog/blob/main/src/db.sqlite) containing: posts, categories, tags, and a relational metadata table that correlates them. database logic exists in: [src/models](https://github.com/xero/static-blog/tree/main/src/models).
+
+### templates
+
+html/mustache templates live in: [src/views](https://github.com/xero/static-blog/tree/main/src/views)
+
+the main stylesheet: [src/ui/theme.css](https://github.com/xero/static-blog/blob/main/src/ui/theme.css)
+
+# status
 
 demo build at [https://xero.0w.nz](https://xero.0w.nz)
 
-core features are working. acutal posts need more formatting. that being said, project is active wip, so it my be broken at any time.
+core features are working. actual posts need more formatting. that being said, project is active wip, so it my be broken at any time.
 
 ## todo & ideas
 
-* fix max pagination
-* optimizations. esp in the view templ8
-* dynamic meta descript tags
+* fix max pagination (max pages seems ignored)
+* syntax highlighting for code posts
+* optimizations (esp in the view templ8)
 * database
     * post cleanup (blockquotes, code, image urls, etc)
     * house keeping (unused columns like comments)
 * `bun edit` for a local web wysiwyg editor?
 * nginx alternatives (e.g. [caddy](https://caddyserver.com/docs/caddyfile/matchers))
     * nginx hx-header "root rewrite" vs inline hx-get to slug urls perf testing
-* idk, maybe actually blogging?  •͡˘㇁•͡
+* idk, maybe actual blogging?   •͡˘㇁•͡
 
 # references
 

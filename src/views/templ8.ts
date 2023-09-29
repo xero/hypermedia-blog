@@ -45,21 +45,29 @@ function pagination(
   totalRows: number,
   perPage: number,
   currentPage: number,
-  linkCount: number = 10,
+  linkCount: number = 5,
 ) {
   if (totalRows == 0 || perPage == 0) {
     return "";
   }
-  const num_pages = Math.ceil(totalRows / perPage);
-  if (num_pages == 1) {
+  const pageCount = Math.ceil(totalRows / perPage);
+  if (pageCount == 1) {
     return "";
   }
   if (currentPage > totalRows) {
-    currentPage = (num_pages - 1) * perPage;
+    currentPage = (pageCount - 1) * perPage;
   }
-  const first = currentPage - linkCount > 0 ? currentPage - (linkCount - 1) : 1;
-  const last =
-    currentPage + linkCount < linkCount ? currentPage + linkCount : num_pages;
+
+  let first = currentPage - linkCount;
+  let last = currentPage + linkCount;
+	if (first < 0) {
+		first = 1;
+		last += linkCount - first;
+	}
+	if (last > pageCount) {
+		last = pageCount;
+		first -= linkCount;
+	}
 
   let DOM = "";
   if (currentPage != first) {
@@ -81,7 +89,7 @@ function pagination(
       }
     }
   }
-  if (currentPage < num_pages) {
+  if (currentPage < pageCount) {
     let next = currentPage + 1;
     if (next >= last) {
       next = last;
@@ -89,6 +97,7 @@ function pagination(
     DOM += `<li><a href="${domain}/page/${next}">&gt;</a></li>`;
   }
   if (currentPage != last) {
+		// last should be pageCount, but i kinda like the stepping better
     DOM += `<li><a href="${domain}/page/${last}">»</a></li>`;
   }
   return `<nav class="pagination"><ul>${DOM}</ul></nav>`;

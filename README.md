@@ -39,7 +39,6 @@ core features are working. actual posts need more formatting. that being said, p
 
 ## todo & ideas
 
-* fix max pagination (max pages seems ignored)
 * syntax highlighting for code posts
 * optimizations (esp in the view templ8)
 * database

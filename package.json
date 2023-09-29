@@ -19,8 +19,9 @@
     "typescript": "^5.0.0"
   },
   "scripts": {
+    "init": "mkdir -p dist/ui && cp -r src/ui/i{co,mg} src/ui/htmx.js dist/ui",
     "css": "bun ./node_modules/postcss-cli/index.js -o ./dist/ui/theme.css ./src/ui/theme.css",
     "htmx": "bun src/index.ts",
-    "start": "bun css && bun htmx"
+    "start": "bun run init && bun run css && bun run htmx"
   }
 }

@@ -2,9 +2,9 @@
 
 ### what are you doing?
 
-i'm rebuilding my website using the "islands" design pattern. taking a database driven site and converting it to a static  ｈｙｐｅｒｍｅｄｉａ powered site generator.
+i'm rebuilding my website using the "[islands](https://jasonformat.com/islands-architecture/)" design pattern. taking a database driven site and converting it to a static  ｈｙｐｅｒｍｅｄｉａ powered site generator.
 
-thinking about calling this project **TNTHUMBS** b/x it's built using:
+thinking about calling this project **TNTHUMBS** b/c it's built using:
  * [t](https://typescriptlang.org)ypescript
  * [n](https://nginx.org)ginx
  * [t](https://tailwindcss.com)ailwindcss
@@ -14,7 +14,7 @@ thinking about calling this project **TNTHUMBS** b/x it's built using:
  * [b](https://bun.sh)un
  * [s](https://sqlite.org/)qlite
 
-> please note, i'm doing this project to learn some of these technologies, so i'm probably doing it wrong.
+> please note, i'm doing this project to learn some of these technologies, so i'm undoubtly doing it wrong in a lot of places. suggestions & pr's are always welcome.
 
 ## how does it work?
 
@@ -39,7 +39,7 @@ the site's content is generated from a 4 table [sqlite database](https://github.
 
 html/mustache templates live in: [src/views](https://github.com/xero/static-blog/tree/main/src/views)
 
-the main stylesheet is here: [src/ui/theme.css](https://github.com/xero/static-blog/blob/main/src/ui/theme.css). i know i'm using tailwinds __"wrong"__ get outta here.
+the main stylesheet is here: [src/ui/theme.css](https://github.com/xero/static-blog/blob/main/src/ui/theme.css). i know i'm using tailwinds _"wrong"_ get outta here.
 
 # status
 
@@ -57,7 +57,7 @@ core features are working. actual posts need more formatting. that being said, p
 * `bun edit` for a local web wysiwyg editor?
 * nginx alternatives (e.g. [caddy](https://caddyserver.com/docs/caddyfile/matchers))
     * nginx hx-header "root rewrite" vs inline hx-get to slug urls perf testing
-* idk, maybe actual blogging?   •͡˘㇁•͡
+* idk, maybe actual blogging?     •͡˘㇁•͡
 
 # references
 

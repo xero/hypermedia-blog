@@ -22,6 +22,7 @@ import {
  *   \/ /--\ | \ __)
  */
 const domain:string = "//xero.0w.nz"; // no trailing slash
+const title:string = "blog.x-e.ro /";
 const postsPerPage:number = 7;
 
 /*   _           _ ___    _        __
@@ -43,7 +44,7 @@ const postsPerPage:number = 7;
 });
 
 function makeErrorPages() {
-  generateErrorPages(domain);
+  generateErrorPages(domain, title);
 }
 function makePages() {
   const total: number = getTotalPostCount();
@@ -53,7 +54,7 @@ function makePages() {
   let current: number = 1;
 
   while (current <= pages) {
-    generatePage(domain, limit, offset, total, current);
+    generatePage(domain, title, limit, offset, total, current);
     offset += limit;
     current++;
   }
@@ -62,7 +63,7 @@ function makePosts() {
   const total: number = getTotalPostCount();
   const posts = getPosts(total, 0);
   posts.forEach((post) => {
-    generatePost(domain, [post]);
+    generatePost(domain, title, [post]);
   });
 }
 function makeTags() {
@@ -75,7 +76,7 @@ function makeTags() {
     let total = getTotalPostCountByTag(id);
     let pages = Math.ceil(total / limit);
     while (current <= pages) {
-      generateTagPage(domain, tag.url, limit, offset, total, current);
+      generateTagPage(domain, title, tag.url, limit, offset, total, current);
       offset += limit;
       current++;
     }
@@ -97,6 +98,7 @@ function makeCats() {
       if (type == "subcat") {
         generateSubCatPage(
           domain,
+					title,
           cat.url,
           cat.blog_cat_id,
           limit,
@@ -105,7 +107,7 @@ function makeCats() {
           current,
         );
       } else {
-        generateCatPage(domain, cat.url, limit, offset, total, current);
+        generateCatPage(domain, title, cat.url, limit, offset, total, current);
       }
       offset += limit;
       current++;

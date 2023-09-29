@@ -112,6 +112,7 @@ async function RenderSidebar(domain: string) {
 
 async function RenderCatPagePosts(
   domain: string,
+  title: string,
   cat_id: number,
   cat_url: string,
   limit: number,
@@ -121,7 +122,7 @@ async function RenderCatPagePosts(
 ) {
   const data = getPostsByCatID(cat_id, limit, offset);
   const postHtml = await getFile("preview");
-  let DOM: string = "";
+  let DOM: string = `<title>${title} ${cat_url}: page ${current} of ${total}</title>`;
   data.forEach((post: any) => {
     const postDate = new Date(post.date * 1000);
     DOM += Mustache.render(postHtml, {
@@ -163,6 +164,7 @@ async function RenderCatPagePosts(
 
 async function RenderSubCatPagePosts(
   domain: string,
+  title: string,
   subcat_id: number,
   subcat_url: string,
   limit: number,
@@ -172,7 +174,7 @@ async function RenderSubCatPagePosts(
 ) {
   const data = getPostsBySubCatID(subcat_id, limit, offset);
   const postHtml = await getFile("preview");
-  let DOM: string = "";
+  let DOM: string = `<title>${title} ${subcat_url}: page ${current} of ${total}</title>`;
   data.forEach((post: any) => {
     const postDate = new Date(post.date * 1000);
     DOM += Mustache.render(postHtml, {
@@ -221,6 +223,7 @@ async function RenderSubCatPagePosts(
 
 async function RenderTagPagePosts(
   domain: string,
+  title: string,
   tag_id: number,
   tag_url: string,
   limit: number,
@@ -230,7 +233,7 @@ async function RenderTagPagePosts(
 ) {
   const data = getPostsByTagID(tag_id, limit, offset);
   const postHtml = await getFile("preview");
-  let DOM: string = "";
+  let DOM: string = `<title>${title} ${tag_url}: page ${current} of ${total}</title>`;
   data.forEach((post: any) => {
     const postDate = new Date(post.date * 1000);
     DOM += Mustache.render(postHtml, {
@@ -269,8 +272,10 @@ async function RenderTagPagePosts(
   DOM += pagination(`${domain}/tag/${tag_url}`, total, limit, current);
   return DOM;
 }
+
 async function RenderPagePosts(
   domain: string,
+  title: string,
   limit: number,
   offset: number,
   total: number,
@@ -278,7 +283,7 @@ async function RenderPagePosts(
 ) {
   let data = getPosts(limit, offset);
   const postHtml = await getFile("preview");
-  let DOM: string = "";
+  let DOM: string = `<title>${title} page ${current} of ${total}</title>`;
   data.forEach((post) => {
     const postDate = new Date(post.date * 1000);
     DOM += Mustache.render(postHtml, {
@@ -318,12 +323,13 @@ async function RenderPagePosts(
   return DOM;
 }
 
-async function RenderPost(domain: string, data: BlogPost) {
+async function RenderPost(domain: string, title: string, data: BlogPost) {
   const postHtml = await getFile("post");
   const post = data[0];
   const postDate = new Date(post.date * 1000);
   return Mustache.render(postHtml, {
     domain: domain,
+    pageTitle: title,
     url: post.url,
     title: post.title,
     content: post.content,
@@ -343,31 +349,32 @@ async function RenderPost(domain: string, data: BlogPost) {
     catList: () => {
       let list = "";
       post.meta.cats.forEach((cat) => {
-          if (cat.blog_cat_id.toString().includes(".")) {
-            const parentID: number = Math.floor(cat.blog_cat_id);
-            const parent = getCategoryByID(parentID);
-            list += `<a href="${domain}/category/${parent[0].url}">${parent[0].name}</a>/<a href="${domain}/category/${parent[0].url}/${cat.url}">${cat.name}</a>, `;
-          } else {
-            list += `<a href="${domain}/category/${cat.url}">${cat.name}</a>, `;
-          }
+        if (cat.blog_cat_id.toString().includes(".")) {
+          const parentID: number = Math.floor(cat.blog_cat_id);
+          const parent = getCategoryByID(parentID);
+          list += `<a href="${domain}/category/${parent[0].url}">${parent[0].name}</a>/<a href="${domain}/category/${parent[0].url}/${cat.url}">${cat.name}</a>, `;
+        } else {
+          list += `<a href="${domain}/category/${cat.url}">${cat.name}</a>, `;
+        }
       });
       return list.slice(0, -2);
     },
   });
 }
-async function SaveErrorPages(domain: string) {
+
+async function SaveErrorPages(domain: string, title: string) {
   const sidebar = await RenderSidebar(domain);
   let errorHtml = await getFile("error");
   const renderedError = Mustache.render(errorHtml, {
     domain: domain,
+    title: title,
   });
   let mainHtml = await getFile("main");
 
   const renderedHtml = Mustache.render(mainHtml, {
-		ripcache: Date.now(),
+    ripcache: Date.now(),
     domain: domain,
-    keywords:
-      "blog, static site, bun, bun.sh, tailwindcss, htmx, xero, x-e.ro, 0w.nz, xero.style",
+    description: `${title} the error page`,
     content: renderedError,
     sidebar: sidebar,
     footer: () => {
@@ -382,6 +389,7 @@ async function SaveErrorPages(domain: string) {
 
 async function SaveCatPage(
   domain: string,
+  title: string,
   cat_url: string,
   limit: number,
   offset: number,
@@ -392,6 +400,7 @@ async function SaveCatPage(
   const sidebar = await RenderSidebar(domain);
   const content = await RenderCatPagePosts(
     domain,
+    title,
     cat_id,
     cat_url,
     limit,
@@ -402,10 +411,9 @@ async function SaveCatPage(
   let mainHtml = await getFile("main");
 
   const renderedHtml = Mustache.render(mainHtml, {
-		ripcache: Date.now(),
+    ripcache: Date.now(),
     domain: domain,
-    keywords:
-      "blog, static site, bun, bun.sh, tailwindcss, htmx, xero, x-e.ro, 0w.nz, xero.style",
+    description: `${title} posts categorized: ${cat_url}, page ${current} of ${total}`,
     content: content,
     sidebar: sidebar,
     footer: () => {
@@ -428,6 +436,7 @@ async function SaveCatPage(
 
 async function SaveSubCatPage(
   domain: string,
+  title: string,
   subcat_url: string,
   subcat_id: number,
   limit: number,
@@ -438,6 +447,7 @@ async function SaveSubCatPage(
   const sidebar = await RenderSidebar(domain);
   const content = await RenderSubCatPagePosts(
     domain,
+    title,
     subcat_id,
     subcat_url,
     limit,
@@ -448,10 +458,9 @@ async function SaveSubCatPage(
   let mainHtml = await getFile("main");
 
   const renderedHtml = Mustache.render(mainHtml, {
-		ripcache: Date.now(),
+    ripcache: Date.now(),
     domain: domain,
-    keywords:
-      "blog, static site, bun, bun.sh, tailwindcss, htmx, xero, x-e.ro, 0w.nz, xero.style",
+    description: `${title} posts categorized: ${subcat_url}, page ${current} of ${total}`,
     content: content,
     sidebar: sidebar,
     footer: () => {
@@ -496,6 +505,7 @@ async function SaveSubCatPage(
 
 async function SaveTagPage(
   domain: string,
+  title: string,
   tag_url: string,
   limit: number,
   offset: number,
@@ -506,6 +516,7 @@ async function SaveTagPage(
   const sidebar = await RenderSidebar(domain);
   const content = await RenderTagPagePosts(
     domain,
+    title,
     tag_id,
     tag_url,
     limit,
@@ -516,10 +527,9 @@ async function SaveTagPage(
   let mainHtml = await getFile("main");
 
   const renderedHtml = Mustache.render(mainHtml, {
-		ripcache: Date.now(),
+    ripcache: Date.now(),
     domain: domain,
-    keywords:
-      "blog, static site, bun, bun.sh, tailwindcss, htmx, xero, x-e.ro, 0w.nz, xero.style",
+    description: `${title} posts tagged: ${tag_url}, page ${current} of ${total}`,
     content: content,
     sidebar: sidebar,
     footer: () => {
@@ -542,20 +552,27 @@ async function SaveTagPage(
 
 async function SavePage(
   domain: string,
+  title: string,
   limit: number,
   offset: number,
   total: number,
   current: number,
 ) {
   const sidebar = await RenderSidebar(domain);
-  const content = await RenderPagePosts(domain, limit, offset, total, current);
+  const content = await RenderPagePosts(
+    domain,
+    title,
+    limit,
+    offset,
+    total,
+    current,
+  );
   let mainHtml = await getFile("main");
 
   const renderedHtml = Mustache.render(mainHtml, {
-		ripcache: Date.now(),
+    ripcache: Date.now(),
     domain: domain,
-    keywords:
-      "blog, static site, bun, bun.sh, tailwindcss, htmx, xero, x-e.ro, 0w.nz, xero.style",
+    description: `${title} page ${current} of ${total}`,
     content: content,
     sidebar: sidebar,
     footer: () => {
@@ -574,9 +591,9 @@ async function SavePage(
   Bun.write(`dist/page/${current}.html`, renderedHtml);
 }
 
-async function SavePost(domain: string, data: BlogPost) {
+async function SavePost(domain: string, title: string, data: BlogPost) {
   const sidebar = await RenderSidebar(domain);
-  const content = await RenderPost(domain, data);
+  const content = await RenderPost(domain, title, data);
   const file = data[0].url;
 
   Bun.write(`dist/htmx/${file}.html`, content);
@@ -585,10 +602,9 @@ async function SavePost(domain: string, data: BlogPost) {
   Bun.write(
     `dist/${file}.html`,
     Mustache.render(mainHtml, {
-		ripcache: Date.now(),
+      ripcache: Date.now(),
       domain: domain,
-      keywords:
-        "blog, static site, bun, bun.sh, tailwindcss, htmx, xero, x-e.ro, 0w.nz, xero.style",
+      description: `${title} ${data[0].title} : ${data[0].subtitle}`,
       content: content,
       sidebar: sidebar,
       footer: () => {
@@ -604,38 +620,46 @@ async function SavePost(domain: string, data: BlogPost) {
  */
 export const generatePage = (
   domain: string,
+  title: string,
   limit: number,
   offset: number,
   total: number,
   current: number,
 ): void => {
-  SavePage(domain, limit, offset, total, current);
+  SavePage(domain, title, limit, offset, total, current);
 };
-export const generatePost = (domain: string, data: BlogPost): void => {
-  SavePost(domain, data);
+export const generatePost = (
+  domain: string,
+  title: string,
+  data: BlogPost,
+): void => {
+  SavePost(domain, title, data);
 };
 export const generateTagPage = (
   domain: string,
+  title: string,
   tag_url: string,
   limit: number,
   offset: number,
   total: number,
   current: number,
 ): void => {
-  SaveTagPage(domain, tag_url, limit, offset, total, current);
+  SaveTagPage(domain, title, tag_url, limit, offset, total, current);
 };
 export const generateCatPage = (
   domain: string,
+  title: string,
   cat_url: string,
   limit: number,
   offset: number,
   total: number,
   current: number,
 ): void => {
-  SaveCatPage(domain, cat_url, limit, offset, total, current);
+  SaveCatPage(domain, title, cat_url, limit, offset, total, current);
 };
 export const generateSubCatPage = (
   domain: string,
+  title: string,
   subcat_url: string,
   subcat_id: number,
   limit: number,
@@ -643,8 +667,17 @@ export const generateSubCatPage = (
   total: number,
   current: number,
 ): void => {
-  SaveSubCatPage(domain, subcat_url, subcat_id, limit, offset, total, current);
+  SaveSubCatPage(
+    domain,
+    title,
+    subcat_url,
+    subcat_id,
+    limit,
+    offset,
+    total,
+    current,
+  );
 };
-export const generateErrorPages = (domain: string): void => {
-  SaveErrorPages(domain);
+export const generateErrorPages = (domain: string, title: string): void => {
+  SaveErrorPages(domain, title);
 };

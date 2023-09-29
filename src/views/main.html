@@ -2,7 +2,7 @@
 <html>
 
 <head>
-	<!--
+<!--
       ┐ │ ┬─┐ ┬─┐┌─┐
       ┌┼┘─├─  │┬┘│ │
       ┆ └ ┴─┘o┆└┘┘─┘
@@ -10,12 +10,12 @@
 │─┘│┌┼┘├─ │  │ ┬│┬┘│─┤├─ ├─
 ┆  ┆┆ └┴─┘┆─┘┆─┘┆└┘┘ ┆┆  ┆
 -->
-	<title>xero.0w.nz</title>
+	<title>{{&description}}</title>
 	<meta charset="utf-8">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="author" content="xero harrison">
-	<meta name="description" content="the website of xero harrison">
-	<meta name="keywords" content="{{&keywords}}">
+	<meta name="description" content="{{&description}}">
+	<meta name="keywords" content="blog, programming, code, art, ascii, pixel, text art, ansi, lab, notes, graffiti, neovim, vim, linux, unix, nerd, bun.sh, htmx, tailwindcss, xero, x-e.ro, xxe.ro, 0w.nz, xero.style">
 	<meta name="theme-color" content="#222222">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="shortcut icon" href="{{&domain}}/ui/ico/favicon.ico">
@@ -25,7 +25,9 @@
 	<link rel="apple-touch-icon-precomposed" sizes="57x57" href="{{&domain}}/ui/ico/icon-57.png">
 	<link rel="apple-touch-icon-precomposed" sizes="16x16" href="{{&domain}}/ui/ico/icon-16.png">
 	<link rel="stylesheet" type="text/css" href="{{&domain}}/ui/theme.css?{{&ripcache}}">
-	<script src="{{&domain}}/ui/htmx.js"></script>
+	<link rel="stylesheet" type="text/css" href="{{&domain}}/ui/hack.css">
+	<script src="{{&domain}}/ui/htmx.min.js"></script>
+	<script src="{{&domain}}/ui/head-support.js"></script>
 	<meta name="htmx-config" content='{"selfRequestsOnly":"true"}'>
 </head>
 
@@ -69,7 +71,7 @@
 			{{&footer}}
 			<img src="{{&domain}}/ui/img/metroid-larva.gif" id="metroid-larva" alt="metroid-larva">
 			<img src="{{&domain}}/ui/img/metroid.gif" id="metroid" alt="metroid">
-			<!--
+<!--
  .___.
 /  @  \
 \ @ @ /

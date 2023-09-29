@@ -1,10 +1,20 @@
-# static blog
+# hypermedia static blog generator
 
 ### what are you doing?
 
-i'm rebuild my website using the "islands" pattern. taking a database driven site and converting it to a static  ｈｙｐｅｒｍｅｄｉａ site generator using sqlite, bun, htmx, and tailwindcss, mustache, & typescript.
+i'm rebuilding my website using the "islands" design pattern. taking a database driven site and converting it to a static  ｈｙｐｅｒｍｅｄｉａ powered site generator.
 
-> please note, i'm doing this project to learn these technologies, so i'm probably doing it wrong.
+thinking about calling this project **TNTHUMBS** b/x it's built using:
+ * [t](https://typescriptlang.org)ypescript
+ * [n](https://nginx.org)ginx
+ * [t](https://tailwindcss.com)ailwindcss
+ * [h](https://htmx.org)tmx
+ * [u](https://unix.org)nix
+ * [m](https://mustache.github.io)ustache
+ * [b](https://bun.sh)un
+ * [s](https://sqlite.org/)qlite
+
+> please note, i'm doing this project to learn some of these technologies, so i'm probably doing it wrong.
 
 ## how does it work?
 
@@ -16,8 +26,8 @@ the scripts loops through the database creating both fully rendered html documen
 all build commands are run using bun.
 
 * `bun install` will pull down all the required dependencies.
-* `bun init` builds the `dist` folder which will contain the rendered site. (also moves files into place)
-* `bun htmx` will run the typescript to actually generate the site.
+* `bun run init` builds the `dist` folder structure and moves files into place for the rendered site.
+* `bun htmx` will run the typescript to actually generate the site's html assets.
 * `bun css` runs the postcss scripts to generate & optimize the site's styling using tailwindscss.
 * `bun start` runs all three commands.
 
@@ -29,7 +39,7 @@ the site's content is generated from a 4 table [sqlite database](https://github.
 
 html/mustache templates live in: [src/views](https://github.com/xero/static-blog/tree/main/src/views)
 
-the main stylesheet: [src/ui/theme.css](https://github.com/xero/static-blog/blob/main/src/ui/theme.css)
+the main stylesheet is here: [src/ui/theme.css](https://github.com/xero/static-blog/blob/main/src/ui/theme.css). i know i'm using tailwinds __"wrong"__ get outta here.
 
 # status
 

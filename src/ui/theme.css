@@ -6,15 +6,6 @@
   font-family: Hack, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
     monospace;
 }
-pre, code {
-	@apply bg-black p-3 my-4 overflow-scroll;
-}
-pre > code {
-	@apply !p-0;
-}
-kbd {
-	@apply bg-black p-1 overflow-auto;
-}
 body {
   @apply bg-grey;
 }
@@ -238,6 +229,46 @@ header {
       h3.read {
         @apply text-lg p-4;
       }
+			h1, h2 {
+				@apply text-xl;
+			}
+			h3 {
+				@apply text-lg;
+			}
+      pre,
+      code {
+        @apply bg-black p-3 my-4 overflow-auto;
+        page-break-inside: avoid;
+        line-height: 1.4;
+      }
+      pre > code,
+      code > pre {
+        @apply !p-0;
+      }
+      kbd {
+        @apply bg-black py-1 px-2 overflow-auto;
+      }
+      ul {
+        list-style-type: square;
+				margin: 15px 0 15px 20px;
+      }
+      blockquote {
+        @apply m-0 p-1.5 pb-4
+      }
+      blockquote p {
+        @apply bg-black text-snow inline-block p-2.5 m-0 text-base;
+      }
+      blockquote cite {
+        @apply block text-base;
+        padding: 10px 0 25px 35px;
+        background-image: url(img/arrow-dark-half.png);
+        background-repeat: no-repeat;
+        background-position: 20px 0;
+      }
+      blockquote cite:before {
+        content: "";
+      }
+
       footer.meta {
         @apply text-xs text-white mt-0 mb-6 mr-0 ml-0 inline-block w-full bg-transparent bg-no-repeat overflow-hidden;
         background-image: url(img/arrow-dark.png);
@@ -484,9 +515,11 @@ footer {
 
     #content {
       @apply !flex-col !basis-2/3;
-			margin-left: auto;
+      margin-left: auto;
 
       article {
+        max-width: 750px;
+
         header {
           h2 {
             @apply !text-2xl;
@@ -497,7 +530,6 @@ footer {
         }
         p {
           @apply !text-base;
-					max-width: 800px;
         }
         h3.read {
           @apply !text-xl;
@@ -511,9 +543,9 @@ footer {
       }
     }
     aside {
- 			margin-right: auto;
-			max-width: 400px;
-			@apply !flex-col !basis-1/3 !px-6 !my-0;
+      margin-right: auto;
+      max-width: 400px;
+      @apply !flex-col !basis-1/3 !px-6 !my-0;
 
       section {
         @apply !float-right;
@@ -550,7 +582,7 @@ footer {
 @media screen(lg) {
   header {
     #linx {
-			margin-right: 3%;
+      margin-right: 3%;
 
       li {
         a {

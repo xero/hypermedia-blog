@@ -9,6 +9,10 @@ import {
   getTotalPostCountByTag,
 } from "./models/blog.js";
 import {
+	generateAtom,
+	generateRSS
+} from "./views/syndication.js";
+import {
   generateCatPage,
   generateErrorPages,
   generatePage,
@@ -21,7 +25,7 @@ import {
  *  \  / /\  |_) (_
  *   \/ /--\ | \ __)
  */
-const domain:string = "//xero.0w.nz"; // no trailing slash
+const domain:string = "https://xero.0w.nz"; // no trailing slash
 const title:string = "blog.x-e.ro /";
 const postsPerPage:number = 7;
 
@@ -65,6 +69,11 @@ function makePosts() {
   posts.forEach((post) => {
     generatePost(domain, title, [post]);
   });
+}
+function makeFeeds() {
+	const posts = getPosts(10, 0);
+	generateRSS(domain, posts);
+	generateAtom(domain, posts);
 }
 function makeTags() {
   const tags = getTags();
@@ -121,5 +130,6 @@ function makeCats() {
 makeErrorPages();
 makePages();
 makePosts();
+makeFeeds();
 makeTags();
 makeCats();

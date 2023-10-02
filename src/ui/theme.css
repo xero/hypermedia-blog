@@ -8,6 +8,8 @@
 }
 body {
   @apply bg-grey;
+  display: block;
+  display: linline;
 }
 .pixelated {
   image-rendering: -moz-crisp-edges;
@@ -206,7 +208,6 @@ header {
 
   #content {
     @apply flex flex-col basis-full;
-    transition: all ease-in 2s;
 
     article {
       header {
@@ -229,12 +230,13 @@ header {
       h3.read {
         @apply text-lg p-4;
       }
-			h1, h2 {
-				@apply text-xl;
-			}
-			h3 {
-				@apply text-lg;
-			}
+      h1,
+      h2 {
+        @apply text-xl;
+      }
+      h3 {
+        @apply text-lg;
+      }
       pre,
       code {
         @apply bg-black p-3 my-4 overflow-auto;
@@ -250,10 +252,10 @@ header {
       }
       ul {
         list-style-type: square;
-				margin: 15px 0 15px 20px;
+        margin: 15px 0 15px 20px;
       }
       blockquote {
-        @apply m-0 p-1.5 pb-4
+        @apply m-0 p-1.5 pb-4;
       }
       blockquote p {
         @apply bg-black text-snow inline-block p-2.5 m-0 text-base;
@@ -310,7 +312,7 @@ header {
       }
     }
     .pagination {
-      @apply w-full bg-repeat;
+      @apply w-full bg-repeat mb-20;
       background: url(img/hash.png);
 
       ul {
@@ -401,11 +403,17 @@ footer {
   @apply flex flex-row m-0 px-2 py-4 bg-black;
 
   #cc {
-    @apply float-left basis-2/3 text-white ml-8 text-sm;
+    @apply float-left basis-3/4 text-white ml-8 text-sm;
 
     i {
-      @apply text-lg;
+      @apply text-base mr-1 text-mainlyblue;
     }
+		em {
+			@apply italic text-xs text-fog;
+		}
+		a {
+			@apply ml-0;
+		}
     #metroid {
       @apply hidden;
     }
@@ -414,7 +422,7 @@ footer {
     }
   }
   nav {
-    @apply basis-1/3 !bg-transparent;
+    @apply basis-1/4 !bg-transparent;
 
     ul {
       @apply !float-right !list-none mr-4;
@@ -423,7 +431,7 @@ footer {
         @apply !float-left;
 
         a {
-          @apply text-lg transition-colors text-white inline-block mx-4;
+          @apply transition-colors text-white inline-block mx-2;
         }
         a:hover,
         a:selected {
@@ -433,8 +441,8 @@ footer {
     }
   }
 }
-
-@media screen(md) {
+/* screen(md) */
+@media (min-width: 768px) {
   header {
     nav {
       background: #111 url(img/nav-bg.png) center -20px !important;
@@ -449,7 +457,7 @@ footer {
       border-top: none !important;
 
       li {
-        @apply !float-left !inline-block !bg-transparent !text-left !p-1;
+        @apply !float-left !bg-transparent !text-left !p-1;
         height: 130px;
 
         a {
@@ -538,8 +546,12 @@ footer {
           background-position: 19px 9px;
         }
       }
-      .pagination a {
-        @apply !text-base;
+      .pagination {
+				@apply mb-0;
+
+				a {
+				  @apply !text-base;
+				}
       }
     }
     aside {
@@ -562,7 +574,7 @@ footer {
       @apply !text-base;
 
       i {
-        @apply !text-2xl;
+        @apply !text-lg;
       }
       #metroid {
         @apply !inline-block;
@@ -573,13 +585,13 @@ footer {
     }
     nav {
       a {
-        @apply !text-2xl;
+        @apply !text-2xl !mx-4;
       }
     }
   }
 }
-
-@media screen(lg) {
+ /* screen(lg) */
+@media (min-width: 1024px) {
   header {
     #linx {
       margin-right: 3%;
@@ -678,10 +690,10 @@ footer {
       @apply basis-1/2;
     }
     #cc {
-      @apply !text-base;
+      @apply !text-lg;
 
       i {
-        @apply !text-2xl;
+        @apply !text-xl;
       }
       #metroid {
         @apply !inline-block;

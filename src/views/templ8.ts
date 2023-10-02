@@ -108,6 +108,30 @@ async function getFile(file: string) {
     type: "text/html;charset=utf-8",
   }).text();
 }
+function convertToRoman(num:number) {
+  var roman:any = {
+    m: 1000,
+    cm: 900,
+    d: 500,
+    cd: 400,
+    c: 100,
+    xc: 90,
+    l: 50,
+    xl: 40,
+    x: 10,
+    ix: 9,
+    v: 5,
+    iv: 4,
+    i: 1
+  };
+  let str = '';
+  for (var i of Object.keys(roman)) {
+    let q = Math.floor(num / roman[i]);
+    num -= q * roman[i];
+    str += i.repeat(q);
+  }
+  return `<em>${str}</em>`;
+}
 
 async function RenderSidebar(domain: string) {
   let sidebar =
@@ -387,8 +411,8 @@ async function SaveErrorPages(domain: string, title: string) {
     content: renderedError,
     sidebar: sidebar,
     footer: () => {
-      const year = new Date().getFullYear();
-      return `${year} xero harrison`;
+      const year = convertToRoman(new Date().getFullYear());
+      return `${year} <a href="https://whois.x-e.ro">xero harrison</a>`;
     },
   });
   mkdirSync(`dist/htmx/`, { recursive: true });
@@ -426,8 +450,8 @@ async function SaveCatPage(
     content: content,
     sidebar: sidebar,
     footer: () => {
-      const year = new Date().getFullYear();
-      return `${year} xero harrison`;
+      const year = convertToRoman(new Date().getFullYear());
+      return `${year} <a href="https://whois.x-e.ro">xero harrison</a>`;
     },
   });
   mkdirSync(`dist/htmx/category/${cat_url}/page`, { recursive: true });
@@ -473,8 +497,8 @@ async function SaveSubCatPage(
     content: content,
     sidebar: sidebar,
     footer: () => {
-      const year = new Date().getFullYear();
-      return `${year} xero harrison`;
+      const year = convertToRoman(new Date().getFullYear());
+      return `${year} <a href="https://whois.x-e.ro">xero harrison</a>`;
     },
   });
 
@@ -542,8 +566,8 @@ async function SaveTagPage(
     content: content,
     sidebar: sidebar,
     footer: () => {
-      const year = new Date().getFullYear();
-      return `${year} xero harrison`;
+      const year = convertToRoman(new Date().getFullYear());
+      return `${year} <a href="https://whois.x-e.ro">xero harrison</a>`;
     },
   });
   mkdirSync(`dist/htmx/tag/${tag_url}/page`, { recursive: true });
@@ -585,8 +609,8 @@ async function SavePage(
     content: content,
     sidebar: sidebar,
     footer: () => {
-      const year = new Date().getFullYear();
-      return `${year} xero harrison`;
+      const year = convertToRoman(new Date().getFullYear());
+      return `${year} <a href="https://whois.x-e.ro">xero harrison</a>`;
     },
   });
   mkdirSync(`dist/page`, { recursive: true });
@@ -617,8 +641,8 @@ async function SavePost(domain: string, title: string, data: BlogPost) {
       content: content,
       sidebar: sidebar,
       footer: () => {
-        const year = new Date().getFullYear();
-        return `${year} xero harrison`;
+				const year = convertToRoman(new Date().getFullYear());
+				return `${year} <a href="https://whois.x-e.ro">xero harrison</a>`;
       },
     }),
   );

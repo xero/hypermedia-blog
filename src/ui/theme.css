@@ -25,7 +25,9 @@ body {
 .text-xxs {
   font-size: 0.5rem;
 }
-
+.revealed {
+	@apply !visible;
+}
 .art.title,
 .code.title,
 .entertainment.title,
@@ -270,7 +272,35 @@ header {
       blockquote cite:before {
         content: "";
       }
-
+			form section {
+				@apply mb-6;
+			}
+			textarea,
+			input[type="text"],
+			input[type="date"] {
+				@apply bg-black text-snow border-midnight border-2 rounded-none p-4 w-full my-2;
+			}
+			#excerpt {
+				height: 300px;
+			}
+			#content {
+				height: 400px;
+			}
+			label {
+				@apply text-mainlyblue font-bold text-lg my-4 w-full;
+			}
+			button {
+				@apply bg-black text-snow border-midnight border-2 rounded-none p-4 mb-6 float-right;
+			}
+			input[type="checkbox"] {
+				@apply inline-block p-2 m-1 bg-black border-midnight float-left;
+			}
+			legend {
+				@apply inline-block p-1 italic text-fog float-left;
+			}
+			callout {
+				@apply bg-midnight text-crimson italic text-base py-2 px-4 mx-1 invisible;
+			}
       footer.meta {
         @apply text-xs text-white mt-0 mb-6 mr-0 ml-0 inline-block w-full bg-transparent bg-no-repeat overflow-hidden;
         background-image: url(img/arrow-dark.png);

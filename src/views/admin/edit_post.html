@@ -1,0 +1,47 @@
+<title>edit post</title>
+<article class="post edit">
+	<header>
+		<h2>edit post</h2>
+		<h3>{{&title}}</h3>
+	</header>
+	<form hx-update="/edit" id="edit">
+		<section class="flex-row">
+			<label for="date">date</label>
+			<input type="date" id="date" name="date" value="{{&date}}" />
+		</section>
+		<section class="flex-row">
+			<label for="title">title</label>
+			<input type="text" id="title" value="{{&title}}" hx-trigger="keyup changed delay:500ms" />
+		</section>
+		<section class="flex-row">
+			<label for="url">url</label>
+			<input type="text" id="url" value="{{&url}}" disabled />
+			<fieldset
+				hx-on:click="htmx.find('#url').toggleAttribute('disabled');htmx.toggleClass(htmx.find('#url_warn'), 'revealed');">
+				<input type="checkbox" id="custom" name="custom" />
+				<legend>custom?</legend>
+				<callout id="url_warn"><i class="nf nf-fa-warning"></i> urls must alphanumeric, lowercase, and underscored.
+				</callout>
+			</fieldset>
+		</section>
+		<section class="flex-row">
+			<label for="subtitle">subtitle</label>
+			<input type="text" id="subtitle" value="{{&subtitle}}" />
+		</section>
+		<section class="flex-row">
+			<label for="excerpt">excerpt</label>
+			<textarea id="excerpt">{{&excerpt}}</textarea>
+		</section>
+		<section class="flex-row">
+			<label for="content">content</label>
+			<textarea id="content">{{&content}}</textarea>
+		</section>
+		<section class="flex-row">
+			<fieldset>
+				<input type="checkbox" id="live" name="live" />
+				<legend>live?</legend>
+			</fieldset>
+			<button type="submit" id="submitCaptain">save</button>
+		</section>
+	</form>
+</article>

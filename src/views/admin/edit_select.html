@@ -1,0 +1,14 @@
+<title>edit post</title>
+<article class="post">
+	<header>
+		<h2>admin</h2>
+		<h3><label for="postList">select a post to edit:</label></h3>
+	</header>
+	<form hx-post="/edit">
+		<input type="text" name="post_id" list="postList">
+		<datalist id="postList">
+			{{&list}}
+		</datalist>
+		<button type="submit" id="submitCaptain">submit</button>
+	</form>
+</article>

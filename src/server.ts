@@ -1,4 +1,9 @@
-import { RenderDelete, RenderEdit, RenderEditForm, RenderForm } from "./views/admin/admin.js";
+import {
+  RenderDelete,
+  RenderEdit,
+  RenderEditForm,
+  RenderForm,
+} from "./views/admin/admin.js";
 const domain: string = "https://xero.0w.nz";
 Bun.serve({
   port: 8888,
@@ -48,24 +53,27 @@ Bun.serve({
         }
         break;
 
-			case "/clean":
-				const str = await req.formData();
-				let url = str.get("url")?.toString();
-				url = url?.replaceAll(" ", "").toLowerCase();
-				url = url?.replace(/((?!([a-z0-9])).)/gi, (match) => {
-					return (match == "-") ? match : '';
-				});
+      case "/clean":
+        const str = await req.formData();
+        let url = str.get("url")?.toString();
+        url = url?.replaceAll(" ", "").toLowerCase();
+        url = url?.replace(/((?!([a-z0-9])).)/gi, (match) => {
+          return match == "-" ? match : "";
+        });
         return new Response(url);
         break;
 
       case "/delete":
         if (req.method == "DELETE") {
           const post = await req.formData();
-          return new Response('<h1>RIP THAT POST &nbsp; <i class="nf nf-md-coffin"></i></h1>', {
-            headers: {
-              "Content-Type": "text/html",
+          return new Response(
+            '<h1>RIP THAT POST &nbsp; <i class="nf nf-md-coffin"></i></h1>',
+            {
+              headers: {
+                "Content-Type": "text/html",
+              },
             },
-          });
+          );
         } else {
           form = await RenderDelete(req.headers.has("HX-Request"), domain);
           return new Response(form, {

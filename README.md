@@ -4,15 +4,7 @@
 
 i'm rebuilding my website using the "[islands](https://jasonformat.com/islands-architecture/)" design pattern. taking a database driven site and converting it to a static  ｈｙｐｅｒｍｅｄｉａ powered site generator.
 
-thinking about calling this project **TNTHUMBS** b/c it's built using:
- * [t](https://typescriptlang.org)ypescript
- * [n](https://nginx.org)ginx
- * [t](https://tailwindcss.com)ailwindcss
- * [h](https://htmx.org)tmx
- * [u](https://unix.org)nix
- * [m](https://mustache.github.io)ustache
- * [b](https://bun.sh)un
- * [s](https://sqlite.org/)qlite
+(i was thinking about calling this project **TNTHUMBS** b/c it's built using: [t](https://typescriptlang.org)ypescript [n](https://nginx.org)ginx [t](https://tailwindcss.com)ailwindcss [h](https://htmx.org)tmx [u](https://unix.org)nix [m](https://mustache.github.io)ustache [b](https://bun.sh)un [s](https://sqlite.org/)qlite)
 
 > please note, i'm doing this project to learn some of these technologies, so i'm undoubtly doing it wrong in a lot of places. suggestions & pr's are always welcome.
 
@@ -29,7 +21,8 @@ all build commands are run using bun.
 * `bun run init` builds the `dist` folder structure and moves files into place for the rendered site.
 * `bun htmx` will run the typescript to actually generate the site's html assets.
 * `bun css` runs the postcss scripts to generate & optimize the site's styling using tailwindscss.
-* `bun start` runs all three commands.
+* `bun start` runs init, htmx, and css.
+* `bun edit` runs the backend server for database management.
 
 ### data
 
@@ -45,16 +38,16 @@ the main stylesheet is here: [src/ui/theme.css](https://github.com/xero/static-b
 
 demo build at [https://xero.0w.nz](https://xero.0w.nz)
 
-core features are working. actual posts need more formatting. that being said, project is active wip, so it my be broken at any time.
+core features are working. actual posts need a bit more formatting. the admin backed is still super wip. project is under active dev, so the demo site may be broken at any time.
 
 ## todo & ideas
 
-* syntax highlighting for code posts
-* optimizations (esp in the view templ8)
-* database
+* `bun edit` for a local web wysiwyg editor
+    * CRUD ops for posts, cats, tags, & metadata
+    * real-time post previews
+* database house keeping
     * post cleanup (blockquotes, code, image urls, etc)
-    * house keeping (unused columns like comments)
-* `bun edit` for a local web wysiwyg editor?
+    * table cleanup (unused columns like comments, rename some meta cols)
 * nginx alternatives (e.g. [caddy](https://caddyserver.com/docs/caddyfile/matchers))
     * nginx hx-header "root rewrite" vs inline hx-get to slug urls perf testing
 * idk, maybe actual blogging?     •͡˘㇁•͡

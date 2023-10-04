@@ -51,7 +51,7 @@ LIMIT $offset, $limit;
   return results;
 };
 
-const getPostByURL = (post_url: string): BlogPost => {
+export const getPost = (post_url: string): BlogPost => {
   const results: any = db
     .query(
       `
@@ -65,7 +65,7 @@ LIMIT 1;
   return results;
 };
 
-const getPostCatsByID = (post_id: number): BlogCats => {
+export const getPostCats = (post_id: number): BlogCats => {
   const results: any = db
     .query(
       `
@@ -88,7 +88,7 @@ WHERE m.blog_id = $post_id AND m.meta_key = "category";
   return results;
 };
 
-const getMainCategory = (cat_id: number): BlogCats => {
+export const getMainCat = (cat_id: number): BlogCats => {
   const results: any = db
     .query(
       `
@@ -110,7 +110,7 @@ WHERE blog_cat_id = $cat_id LIMIT 0,1;
   return results;
 };
 
-const getPostTagsByID = (post_id: number): BlogTags => {
+export const getPostTags = (post_id: number): BlogTags => {
   const results: any = db
     .query(
       `
@@ -133,7 +133,7 @@ WHERE m.blog_id = $post_id AND m.meta_key = 'tag';
   return results;
 };
 
-const getCats = (): BlogCats => {
+export const getCategories = (): BlogCats => {
   const results: any = db
     .query(
       `
@@ -155,7 +155,7 @@ ORDER BY blog_cat_id ASC;
   return results;
 };
 
-const getCatByID = (cat_id:number): BlogCats => {
+export const getCategoryByID = (cat_id: number): BlogCats => {
   const results: any = db
     .query(
       `
@@ -169,7 +169,7 @@ LIMIT 1;
   return results;
 };
 
-const getAllTags = (): BlogTags => {
+export const getTags = (): BlogTags => {
   const results: any = db
     .query(
       `
@@ -190,7 +190,7 @@ ORDER BY url ASC;
   }
   return results;
 };
-const getPostsCount = (): number => {
+export const getTotalPostCount = (): number => {
   const results = db
     .query(
       `
@@ -202,7 +202,8 @@ WHERE live = 1;
     .all({});
   return results.length;
 };
-const getCatPostCount = (cat_id: number): number => {
+
+export const getTotalPostCountByCat = (cat_id: number): number => {
   const results = db
     .query(
       `
@@ -212,10 +213,10 @@ WHERE meta_key = 'category'
 AND meta_val >= $greater AND meta_val < $less;
 `,
     )
-    .all({ $greater: cat_id, $less: (cat_id+1) });
+    .all({ $greater: cat_id, $less: cat_id + 1 });
   return results.length;
 };
-const getSubCatPostCount = (subcat_id: number): number => {
+export const getTotalPostCountBySubCat = (subcat_id: number): number => {
   const results = db
     .query(
       `
@@ -229,7 +230,7 @@ AND meta_val = $subcat_id;
   return results.length;
 };
 
-const getTagPostCount = (tag_id: number): number => {
+export const getTotalPostCountByTag = (tag_id: number): number => {
   const results = db
     .query(
       `
@@ -242,8 +243,8 @@ AND meta_val = $tag_id;
     .all({ $tag_id: tag_id });
   return results.length;
 };
-const getCatByURL = (cat_name: string) => {
-  const results:any = db
+export const getCatByName = (cat_name: string) => {
+  const results: any = db
     .query(
       `
 SELECT blog_cat_id
@@ -255,8 +256,8 @@ LIMIT 1;
     .all({ $cat_name: cat_name });
   return parseFloat(results[0].blog_cat_id);
 };
-const getTagByURL = (tag_name: string) => {
-  const results:any = db
+export const getTagByName = (tag_name: string) => {
+  const results: any = db
     .query(
       `
 SELECT tag_id
@@ -268,11 +269,7 @@ LIMIT 1;",
     .all({ $tag_name: tag_name });
   return parseInt(results[0].tag_id);
 };
-const getPostsByCat = (
-  cat_id: number,
-  limit: number,
-  offset: number,
-) => {
+const getPostsByCat = (cat_id: number, limit: number, offset: number) => {
   const results = db
     .query(
       `
@@ -288,19 +285,15 @@ LIMIT $offset, $limit;
 `,
     )
     .all({
-			$greater: cat_id,
-			$less: (cat_id+1),
+      $greater: cat_id,
+      $less: cat_id + 1,
       $limit: limit,
-      $offset: offset
+      $offset: offset,
     });
   return results;
 };
 
-const getPostsBySubCat = (
-  subcat_id: number,
-  limit: number,
-  offset: number,
-) => {
+const getPostsBySubCat = (subcat_id: number, limit: number, offset: number) => {
   const results = db
     .query(
       `
@@ -318,15 +311,11 @@ LIMIT $offset, $limit;
     .all({
       $subcat_id: subcat_id,
       $limit: limit,
-      $offset: offset
+      $offset: offset,
     });
   return results;
 };
-const getPostsByTag = (
-  tag_id: number,
-  limit: number,
-  offset: number,
-) => {
+const getPostsByTag = (tag_id: number, limit: number, offset: number) => {
   const results = db
     .query(
       `
@@ -338,12 +327,12 @@ WHERE m.meta_key = 'tag' AND m.meta_val = $tag_id AND p.live = 1
 GROUP BY p.post_id
 ORDER BY p.date DESC
 LIMIT $offset, $limit;
-`,
+		`,
     )
     .all({
       $tag_id: tag_id,
       $limit: limit,
-      $offset: offset
+      $offset: offset,
     });
   return results;
 };
@@ -355,97 +344,57 @@ LIMIT $offset, $limit;
 export const getPosts = (limit: number, offset: number): BlogPost => {
   let posts = getPostsRange(limit, offset);
   posts.forEach((post) => {
-    const cats = getPostCatsByID(post.post_id);
-    const tags = getPostTagsByID(post.post_id);
-    const main = getMainCategory(cats[0].blog_cat_id);
+    const cats = getPostCats(post.post_id);
+    const tags = getPostTags(post.post_id);
+    const main = getMainCat(cats[0].blog_cat_id);
     post.meta = { cats, tags, main };
   });
   return posts;
 };
 
-export const getPostsByCatID = (cat_id: number, limit: number, offset: number) => {
+export const getPostsByCatID = (
+  cat_id: number,
+  limit: number,
+  offset: number,
+) => {
   let posts = getPostsByCat(cat_id, limit, offset);
-  posts.forEach((post:any) => {
-    const cats = getPostCatsByID(post.post_id);
-    const tags = getPostTagsByID(post.post_id);
-    const main = getMainCategory(cats[0].blog_cat_id);
+  posts.forEach((post: any) => {
+    const cats = getPostCats(post.post_id);
+    const tags = getPostTags(post.post_id);
+    const main = getMainCat(cats[0].blog_cat_id);
     post.meta = { cats, tags, main };
   });
   return posts;
-}
+};
 
-export const getPostsBySubCatID = (subcat_id: number, limit: number, offset: number) => {
+export const getPostsBySubCatID = (
+  subcat_id: number,
+  limit: number,
+  offset: number,
+) => {
   let posts = getPostsBySubCat(subcat_id, limit, offset);
-  posts.forEach((post:any) => {
-    const cats = getPostCatsByID(post.post_id);
-    const tags = getPostTagsByID(post.post_id);
-    const main = getMainCategory(cats[0].blog_cat_id);
+  posts.forEach((post: any) => {
+    const cats = getPostCats(post.post_id);
+    const tags = getPostTags(post.post_id);
+    const main = getMainCat(cats[0].blog_cat_id);
     post.meta = { cats, tags, main };
   });
   return posts;
-}
+};
 
-export const getPostsByTagID = (tag_id: number, limit: number, offset: number) => {
+export const getPostsByTagID = (
+  tag_id: number,
+  limit: number,
+  offset: number,
+) => {
   let posts = getPostsByTag(tag_id, limit, offset);
-  posts.forEach((post:any) => {
-    const cats = getPostCatsByID(post.post_id);
-    const tags = getPostTagsByID(post.post_id);
-    const main = getMainCategory(cats[0].blog_cat_id);
+  posts.forEach((post: any) => {
+    const cats = getPostCats(post.post_id);
+    const tags = getPostTags(post.post_id);
+    const main = getMainCat(cats[0].blog_cat_id);
     post.meta = { cats, tags, main };
   });
   return posts;
-}
-
-export const getTotalPostCountByCat = (cat_id: number) => {
-  return getCatPostCount(cat_id);
-}
-
-export const getTotalPostCountBySubCat = (subcat_id: number) => {
-  return getSubCatPostCount(subcat_id);
-}
-
-export const getTotalPostCountByTag = (tag_id: number) => {
-  return getTagPostCount(tag_id);
-}
-
-export const getCatByName = (url: string):number => {
-  return getCatByURL(url);
-}
-
-export const getTagByName = (url: string):number => {
-  return getTagByURL(url);
-}
-
-export const getTotalPostCount = (): number => {
-  return getPostsCount();
-};
-
-export const getPost = (url: string): BlogPost => {
-  return getPostByURL(url);
-};
-
-export const getPostCats = (id: number): BlogCats => {
-  return getPostCatsByID(id);
-};
-
-export const getPostTags = (id: number): BlogTags => {
-  return getPostTagsByID(id);
-};
-
-export const getMainCat = (id: number): BlogCats => {
-  return getMainCategory(id);
-};
-
-export const getCategories = (): BlogCats => {
-  return getCats();
-};
-
-export const getCategoryByID = (id: number): BlogCats => {
-  return getCatByID(id);
-};
-
-export const getTags = (): BlogTags => {
-  return getAllTags();
 };
 
 export { quit };

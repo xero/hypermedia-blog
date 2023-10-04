@@ -46,7 +46,7 @@ function pagination(
   perPage: number,
   currentPage: number,
   linkCount: number = 5,
-) {
+): string {
   if (totalRows == 0 || perPage == 0) {
     return "";
   }
@@ -60,14 +60,14 @@ function pagination(
 
   let first = currentPage - linkCount;
   let last = currentPage + linkCount;
-	if (first < 0) {
-		first = 1;
-		last += linkCount - first;
-	}
-	if (last > pageCount) {
-		last = pageCount;
-		first -= linkCount;
-	}
+  if (first < 0) {
+    first = 1;
+    last += linkCount - first;
+  }
+  if (last > pageCount) {
+    last = pageCount;
+    first -= linkCount;
+  }
 
   let DOM = "";
   if (currentPage != first) {
@@ -97,7 +97,7 @@ function pagination(
     DOM += `<li><a href="${domain}/page/${next}">&gt;</a></li>`;
   }
   if (currentPage != last) {
-		// last should be pageCount, but i kinda like the stepping better
+    // last should be pageCount, but i kinda like the stepping better
     DOM += `<li><a href="${domain}/page/${last}">»</a></li>`;
   }
   return `<nav class="pagination"><ul>${DOM}</ul></nav>`;
@@ -108,8 +108,9 @@ async function getFile(file: string) {
     type: "text/html;charset=utf-8",
   }).text();
 }
-function convertToRoman(num:number) {
-  var roman:any = {
+
+function convertToRoman(num: number): string {
+  var roman: any = {
     m: 1000,
     cm: 900,
     d: 500,
@@ -122,9 +123,9 @@ function convertToRoman(num:number) {
     ix: 9,
     v: 5,
     iv: 4,
-    i: 1
+    i: 1,
   };
-  let str = '';
+  let str = "";
   for (var i of Object.keys(roman)) {
     let q = Math.floor(num / roman[i]);
     num -= q * roman[i];
@@ -315,11 +316,12 @@ async function RenderPagePosts(
   current: number,
 ) {
   let data = getPosts(limit, offset);
-  const postHtml = await getFile("preview");
+  const postHtml = await getFile("post");
+  const prevHtml = await getFile("preview");
   let DOM: string = `<title>${title} page ${current} of ${total}</title>`;
   data.forEach((post) => {
     const postDate = new Date(post.date * 1000);
-    DOM += Mustache.render(postHtml, {
+    DOM += Mustache.render(post.excerpt == post.content ? postHtml : prevHtml, {
       domain: domain,
       url: post.url,
       title: post.title,
@@ -395,7 +397,7 @@ async function RenderPost(domain: string, title: string, data: BlogPost) {
   });
 }
 
-async function SaveErrorPages(domain: string, title: string) {
+export async function generateErrorPages(domain: string, title: string) {
   const sidebar = await RenderSidebar(domain);
   let errorHtml = await getFile("error");
   const renderedError = Mustache.render(errorHtml, {
@@ -420,7 +422,7 @@ async function SaveErrorPages(domain: string, title: string) {
   Bun.write(`dist/error.html`, renderedHtml);
 }
 
-async function SaveCatPage(
+export async function generateCatPage(
   domain: string,
   title: string,
   cat_url: string,
@@ -467,7 +469,7 @@ async function SaveCatPage(
   Bun.write(`dist/category/${cat_url}/page/${current}.html`, renderedHtml);
 }
 
-async function SaveSubCatPage(
+export async function generateSubCatPage(
   domain: string,
   title: string,
   subcat_url: string,
@@ -536,7 +538,7 @@ async function SaveSubCatPage(
   );
 }
 
-async function SaveTagPage(
+export async function generateTagPage(
   domain: string,
   title: string,
   tag_url: string,
@@ -583,7 +585,7 @@ async function SaveTagPage(
   Bun.write(`dist/tag/${tag_url}/page/${current}.html`, renderedHtml);
 }
 
-async function SavePage(
+export async function generatePage(
   domain: string,
   title: string,
   limit: number,
@@ -605,7 +607,7 @@ async function SavePage(
   const renderedHtml = Mustache.render(mainHtml, {
     ripcache: Date.now(),
     domain: domain,
-    description: `${title} page ${current} of ${total}`,
+    description: (current == 1) ? `${title} xero's blog` : `${title} page ${current} of ${total}`,
     content: content,
     sidebar: sidebar,
     footer: () => {
@@ -624,7 +626,11 @@ async function SavePage(
   Bun.write(`dist/page/${current}.html`, renderedHtml);
 }
 
-async function SavePost(domain: string, title: string, data: BlogPost) {
+export async function generatePost(
+  domain: string,
+  title: string,
+  data: BlogPost,
+) {
   const sidebar = await RenderSidebar(domain);
   const content = await RenderPost(domain, title, data);
   const file = data[0].url;
@@ -641,76 +647,9 @@ async function SavePost(domain: string, title: string, data: BlogPost) {
       content: content,
       sidebar: sidebar,
       footer: () => {
-				const year = convertToRoman(new Date().getFullYear());
-				return `${year} <a href="https://whois.x-e.ro">xero harrison</a>`;
+        const year = convertToRoman(new Date().getFullYear());
+        return `${year} <a href="https://whois.x-e.ro">xero harrison</a>`;
       },
     }),
   );
 }
-/*   _     _   _   _ ___ __
- *  |_ \/ |_) / \ |_) | (_
- *  |_ /\ |   \_/ | \ | __)
- */
-export const generatePage = (
-  domain: string,
-  title: string,
-  limit: number,
-  offset: number,
-  total: number,
-  current: number,
-): void => {
-  SavePage(domain, title, limit, offset, total, current);
-};
-export const generatePost = (
-  domain: string,
-  title: string,
-  data: BlogPost,
-): void => {
-  SavePost(domain, title, data);
-};
-export const generateTagPage = (
-  domain: string,
-  title: string,
-  tag_url: string,
-  limit: number,
-  offset: number,
-  total: number,
-  current: number,
-): void => {
-  SaveTagPage(domain, title, tag_url, limit, offset, total, current);
-};
-export const generateCatPage = (
-  domain: string,
-  title: string,
-  cat_url: string,
-  limit: number,
-  offset: number,
-  total: number,
-  current: number,
-): void => {
-  SaveCatPage(domain, title, cat_url, limit, offset, total, current);
-};
-export const generateSubCatPage = (
-  domain: string,
-  title: string,
-  subcat_url: string,
-  subcat_id: number,
-  limit: number,
-  offset: number,
-  total: number,
-  current: number,
-): void => {
-  SaveSubCatPage(
-    domain,
-    title,
-    subcat_url,
-    subcat_id,
-    limit,
-    offset,
-    total,
-    current,
-  );
-};
-export const generateErrorPages = (domain: string, title: string): void => {
-  SaveErrorPages(domain, title);
-};

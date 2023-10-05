@@ -92,7 +92,7 @@
 		let val = htmx.values(htmx.find("#edit"));
 		let cat = val["postCats"].toString();
 		if (!Object.values(val["cats"]).includes(cat)) {
-			htmx.find("#pounce").innerHTML += `<button onclick="untag(event, 'btn${cat}')" id="btn${cat}" class="tag">${cat}<input type="hidden" name="cats" value="${cat}"/></button>`;
+			htmx.find("#pounce").innerHTML += `<button onclick="remove(event, 'btn${cat}')" id="btn${cat}" class="cat">${cat}<input type="hidden" name="cats" value="${cat}"/></button>`;
 		}
 		htmx.find("#postCats").value = "";
 	}
@@ -100,11 +100,11 @@
 		let val = htmx.values(htmx.find("#edit"));
 		let tag = val["postTags"].toString();
 		if (!Object.values(val["tags"]).includes(tag)) {
-			htmx.find("#tagCloud").innerHTML += `<button onclick="untag(event, 'btn${tag}')" id="btn${tag}" class="tag">${tag}<input type="hidden" name="tags" value="${tag}"/></button>`;
+			htmx.find("#tagCloud").innerHTML += `<button onclick="remove(event, 'btn${tag}')" id="btn${tag}" class="tag">${tag}<input type="hidden" name="tags" value="${tag}"/></button>`;
 		}
 		htmx.find("#postTags").value = "";
 	}
-	function untag(e, id) {
+	function remove(e, id) {
 		e.preventDefault();
 		htmx.find("#" + id).outerHTML = '';
 	}

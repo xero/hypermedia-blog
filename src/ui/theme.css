@@ -292,13 +292,17 @@ header {
       button {
         @apply bg-black text-snow border-midnight border-2 rounded-none p-4 mb-6 ml-4 float-right;
       }
-      button.tag {
+      button.tag, button.cat {
         @apply bg-black text-snow border-midnight border-2 rounded-none p-2 my-2 mr-2 float-left;
       }
       button.tag::after {
         content: "\f0910";
         @apply text-red px-2;
       }
+			button.cat::after {
+        @apply text-red px-2;
+				content: "\f0258";
+			}
       input[type="checkbox"] {
         @apply inline-block p-2 m-1 bg-black border-midnight float-left;
       }

@@ -31,7 +31,7 @@ export async function RenderEditForm(post: any, domain: string) {
     tagcloud: () => {
       let tags = "";
       postData[0].meta.tags.forEach((tag) => {
-        tags += `<button onclick="untag(event, 'btn${tag.url}')" id="btn${tag.url}" class="tag">${tag.name}<input type="hidden" name="tags" value="${tag.url}"/></button>`;
+        tags += `<button onclick="remove(event, 'btn${tag.url}')" id="btn${tag.url}" class="tag">${tag.name}<input type="hidden" name="tags" value="${tag.url}"/></button>`;
       });
       return tags;
     },
@@ -46,7 +46,7 @@ export async function RenderEditForm(post: any, domain: string) {
 		pounce: () => {
       let cats: string = "";
       postData[0].meta.cats.forEach((cat) => {
-        cats += `<button onclick="untag(event, 'btn${cat.url}')" id="btn${cat.url}" class="tag">${cat.name}<input type="hidden" name="cats" value="${cat.url}"/></button>`;
+        cats += `<button onclick="remove(event, 'btn${cat.url}')" id="btn${cat.url}" class="cat">${cat.name}<input type="hidden" name="cats" value="${cat.url}"/></button>`;
       });
       return cats;
 		},

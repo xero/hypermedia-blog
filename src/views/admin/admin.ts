@@ -1,5 +1,5 @@
 import Mustache from "mustache";
-import { BlogPost, getPost, getPosts } from "../../models/blog.js";
+import { BlogPost, getCategories, getPostByURL, getPosts, getTags } from "../../models/blog.js";
 
 async function getFile(file: string) {
   return Bun.file(`src/views/admin/${file}.html`, {
@@ -16,16 +16,48 @@ export async function RenderForm(domain: string) {
   });
 }
 
-export async function RenderEditForm(post:any, domain: string) {
+export async function RenderEditForm(post: any, domain: string) {
   const postHtml = await getFile("edit_post");
-  const postData = getPost(post);
+  const postData = getPostByURL(post);
   return Mustache.render(postHtml, {
     url: postData[0].url,
-    date: new Date(postData[0].date*1000).toLocaleDateString("en-CA", { timeZone: "America/New_York"}),
+    date: new Date(postData[0].date * 1000).toLocaleDateString("en-CA", {
+      timeZone: "America/New_York",
+    }),
     title: postData[0].title,
     subtitle: postData[0].subtitle,
     excerpt: postData[0].excerpt,
     content: postData[0].content,
+    tagcloud: () => {
+      let tags = "";
+      postData[0].meta.tags.forEach((tag) => {
+        tags += `<button onclick="untag(event, 'btn${tag.url}')" id="btn${tag.url}" class="tag">${tag.name}<input type="hidden" name="tags" value="${tag.url}"/></button>`;
+      });
+      return tags;
+    },
+    tags: () => {
+      let tags: string = "";
+      const allTags = getTags();
+      allTags.forEach((tag) => {
+        tags += `<option value="${tag.name}"></option>`;
+      });
+      return tags;
+    },
+		pounce: () => {
+      let cats: string = "";
+      postData[0].meta.cats.forEach((cat) => {
+        cats += `<button onclick="untag(event, 'btn${cat.url}')" id="btn${cat.url}" class="tag">${cat.name}<input type="hidden" name="cats" value="${cat.url}"/></button>`;
+      });
+      return cats;
+		},
+    cats: () => {
+      let cats: string = "";
+      const allCats = getCategories();
+      allCats.forEach((cat) => {
+        cats += `<option value="${cat.name}"></option>`;
+      });
+      return cats;
+    },
     domain: domain,
     footer: "xero harrison",
   });
@@ -33,8 +65,8 @@ export async function RenderEditForm(post:any, domain: string) {
 
 export async function RenderEdit(hx: boolean, domain: string) {
   const blogPosts: BlogPost = getPosts(1000, 0);
-  let list: string = '';
-  blogPosts.forEach((post:any) => {
+  let list: string = "";
+  blogPosts.forEach((post: any) => {
     list += `
 				<option value="${post.url}"/>`;
   });
@@ -50,21 +82,21 @@ export async function RenderEdit(hx: boolean, domain: string) {
       domain: domain,
       footer: "xero harrison",
       content: editList,
-			ripcache: Date.now(),
+      ripcache: Date.now(),
     });
   }
 }
 
 export async function RenderDelete(hx: boolean, domain: string) {
   const blogPosts: BlogPost = getPosts(1000, 0);
-  let list: string = '';
-  blogPosts.forEach((post:any) => {
+  let list: string = "";
+  blogPosts.forEach((post: any) => {
     list += `
 				<option value="${post.title}"/>`;
   });
   const listHtml = await getFile("rm_select");
   const rmList: string = Mustache.render(listHtml, {
-    list: list
+    list: list,
   });
   if (hx) {
     return rmList;

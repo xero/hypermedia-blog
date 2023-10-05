@@ -53,16 +53,6 @@ Bun.serve({
         }
         break;
 
-      case "/clean":
-        const str = await req.formData();
-        let url = str.get("url")?.toString();
-        url = url?.replaceAll(" ", "").toLowerCase();
-        url = url?.replace(/((?!([a-z0-9])).)/gi, (match) => {
-          return match == "-" ? match : "";
-        });
-        return new Response(url);
-        break;
-
       case "/delete":
         if (req.method == "DELETE") {
           const post = await req.formData();

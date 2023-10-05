@@ -5,7 +5,7 @@
 		<h3><label for="postList">select a post to edit:</label></h3>
 	</header>
 	<form hx-post="/edit">
-		<input type="text" name="post_id" list="postList">
+		<input type="text" name="post_id" list="postList" placeholder="select post...">
 		<datalist id="postList">
 			{{&list}}
 		</datalist>

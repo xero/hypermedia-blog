@@ -341,6 +341,17 @@ LIMIT $offset, $limit;
  *  |_ \/ |_) / \ |_) | (_
  *  |_ /\ |   \_/ | \ | __)
  */
+export const getPostByURL = (url:string): BlogPost => {
+  let post = getPost(url);
+  post.forEach((post) => {
+    const cats = getPostCats(post.post_id);
+    const tags = getPostTags(post.post_id);
+    const main = getMainCat(cats[0].blog_cat_id);
+    post.meta = { cats, tags, main };
+  });
+  return post;
+};
+
 export const getPosts = (limit: number, offset: number): BlogPost => {
   let posts = getPostsRange(limit, offset);
   posts.forEach((post) => {

@@ -1,5 +1,6 @@
 import Mustache from "mustache";
 import { BlogPost, getCategories, getPostByURL, getPosts, getTags } from "../../models/blog.js";
+import { getAllPosts } from "../../models/admin.js";
 
 async function getFile(file: string) {
   return Bun.file(`src/views/admin/${file}.html`, {
@@ -16,18 +17,29 @@ export async function RenderForm(domain: string) {
   });
 }
 
+export async function RenderResponse(title: string, body:string) {
+  const postHtml = await getFile("response");
+  return Mustache.render(postHtml, {
+    body: body,
+		title: title,
+  });
+}
+
 export async function RenderEditForm(post: any, domain: string) {
   const postHtml = await getFile("edit_post");
   const postData = getPostByURL(post);
+	const live:string = (postData[0].live == 1) ? "checked" : "";
   return Mustache.render(postHtml, {
     url: postData[0].url,
     date: new Date(postData[0].date * 1000).toLocaleDateString("en-CA", {
       timeZone: "America/New_York",
     }),
+		post_id: postData[0].post_id,
     title: postData[0].title,
     subtitle: postData[0].subtitle,
     excerpt: postData[0].excerpt,
     content: postData[0].content,
+		live: live,
     tagcloud: () => {
       let tags = "";
       postData[0].meta.tags.forEach((tag) => {
@@ -64,7 +76,7 @@ export async function RenderEditForm(post: any, domain: string) {
 }
 
 export async function RenderEdit(hx: boolean, domain: string) {
-  const blogPosts: BlogPost = getPosts(1000, 0);
+	const blogPosts:any = getAllPosts();
   let list: string = "";
   blogPosts.forEach((post: any) => {
     list += `

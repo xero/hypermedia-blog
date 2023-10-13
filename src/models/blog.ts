@@ -11,6 +11,7 @@ export type BlogCats = {
 }[];
 
 export type BlogTags = {
+	tag_id: number;
   name: string;
   url: string;
   count: number;
@@ -30,6 +31,7 @@ export type BlogPost = {
   excerpt: string;
   content: string;
   date: number;
+	live: number;
   meta: BlogMeta;
 }[];
 
@@ -55,9 +57,9 @@ export const getPost = (post_url: string): BlogPost => {
   const results: any = db
     .query(
       `
-SELECT post_id, url, title, subtitle, excerpt, content, date
+SELECT post_id, url, title, subtitle, excerpt, content, date, live
 FROM blog_posts
-WHERE url = $post_url AND live = 1
+WHERE url = $post_url
 LIMIT 1;
     `,
     )
@@ -114,7 +116,7 @@ export const getPostTags = (post_id: number): BlogTags => {
   const results: any = db
     .query(
       `
-SELECT t.name, t.url, t.tag_count as count
+SELECT t.tag_id, t.name, t.url, t.tag_count as count
 FROM blog_meta m INNER JOIN blog_tags t
 ON m.meta_val = t.tag_id
 WHERE m.blog_id = $post_id AND m.meta_key = 'tag';
@@ -124,6 +126,7 @@ WHERE m.blog_id = $post_id AND m.meta_key = 'tag';
   if (isEmpty(results)) {
     return [
       {
+				tag_id: 0,
         name: "",
         url: "",
         count: 0,
@@ -173,7 +176,7 @@ export const getTags = (): BlogTags => {
   const results: any = db
     .query(
       `
-SELECT name, url, tag_count as count
+SELECT tag_id, name, url, tag_count as count
 FROM blog_tags
 ORDER BY url ASC;
 `,
@@ -182,6 +185,7 @@ ORDER BY url ASC;
   if (isEmpty(results)) {
     return [
       {
+				tag_id: 0,
         name: "untagged",
         url: "untagged",
         count: 0,

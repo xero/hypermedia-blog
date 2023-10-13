@@ -4,15 +4,16 @@
 		<h2>edit post</h2>
 		<h3>{{&title}}</h3>
 	</header>
-	<form id="edit">
+	<form id="edit" hx-put="/edit">
+		<input type="hidden" id="post_id" name="post_id" value="{{&post_id}}" />
 		<section class="flex-row">
 			<label for="date">date</label>
 			<input type="date" id="date" name="date" value="{{&date}}" required onkeydown="return event.key != 'Enter';" />
 		</section>
 		<section class="flex-row">
 			<label for="url">url</label>
-			<input type="text" id="url" value="{{&url}}" required pattern="[0-9a-z_]+"
-				onkeydown="return event.key != 'Enter';" disabled />
+			<input type="text" name="url" id="url" value="{{&url}}" required pattern="[0-9a-z_]+"
+				onkeydown="return event.key != 'Enter';" readonly />
 			<fieldset hx-on:click="customize()">
 				<input type="checkbox" id="custom" />
 				<legend>custom?</legend>
@@ -65,7 +66,7 @@
 		<section class="flex-row">
 			<fieldset>
 				<label for="live">published</label><br />
-				<input type="checkbox" id="live" name="live" />
+				<input type="checkbox" id="live" name="live" {{&live}} />
 				<legend>live?</legend>
 			</fieldset>
 		</section>
@@ -84,7 +85,7 @@
 	}
 	function customize() {
 		htmx.find("#custom").toggleAttribute("checked");
-		htmx.find("#url").toggleAttribute("disabled");
+		htmx.find("#url").toggleAttribute("readonly");
 		htmx.toggleClass(htmx.find("#url_warn"), "revealed");
 		sanitize();
 	}

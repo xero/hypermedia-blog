@@ -1,5 +1,11 @@
 import Mustache from "mustache";
-import { BlogPost, getCategories, getPostByURL, getPosts, getTags } from "../../models/blog.js";
+import {
+  BlogPost,
+  getCategories,
+  getPostByURL,
+  getPosts,
+  getTags,
+} from "../../models/blog.js";
 import { getAllPosts } from "../../models/admin.js";
 
 async function getFile(file: string) {
@@ -9,37 +15,42 @@ async function getFile(file: string) {
 }
 
 export async function RenderForm(domain: string) {
+  const body = await RenderResponse(
+    "welcome to hypermedia",
+    '<img src="https://0.xxe.ro/power.gif" alt="now yer bloggin with hypermedia">',
+  );
   const postHtml = await getFile("main");
   return Mustache.render(postHtml, {
     domain: domain,
     footer: "xero harrison",
-    content: "<h1>hi!</h1>",
+    content: body,
+    ripcache: Date.now(),
   });
 }
 
-export async function RenderResponse(title: string, body:string) {
+export async function RenderResponse(title: string, body: string) {
   const postHtml = await getFile("response");
   return Mustache.render(postHtml, {
     body: body,
-		title: title,
+    title: title,
   });
 }
 
 export async function RenderEditForm(post: any, domain: string) {
   const postHtml = await getFile("edit_post");
   const postData = getPostByURL(post);
-	const live:string = (postData[0].live == 1) ? "checked" : "";
+  const live: string = postData[0].live == 1 ? "checked" : "";
   return Mustache.render(postHtml, {
     url: postData[0].url,
     date: new Date(postData[0].date * 1000).toLocaleDateString("en-CA", {
       timeZone: "America/New_York",
     }),
-		post_id: postData[0].post_id,
+    post_id: postData[0].post_id,
     title: postData[0].title,
     subtitle: postData[0].subtitle,
     excerpt: postData[0].excerpt,
     content: postData[0].content,
-		live: live,
+    live: live,
     tagcloud: () => {
       let tags = "";
       postData[0].meta.tags.forEach((tag) => {
@@ -55,13 +66,13 @@ export async function RenderEditForm(post: any, domain: string) {
       });
       return tags;
     },
-		pounce: () => {
+    pounce: () => {
       let cats: string = "";
       postData[0].meta.cats.forEach((cat) => {
         cats += `<button onclick="remove(event, 'btn${cat.url}')" id="btn${cat.url}" class="cat">${cat.name}<input type="hidden" name="cats" value="${cat.url}"/></button>`;
       });
       return cats;
-		},
+    },
     cats: () => {
       let cats: string = "";
       const allCats = getCategories();
@@ -72,11 +83,12 @@ export async function RenderEditForm(post: any, domain: string) {
     },
     domain: domain,
     footer: "xero harrison",
+    ripcache: Date.now(),
   });
 }
 
 export async function RenderEdit(hx: boolean, domain: string) {
-	const blogPosts:any = getAllPosts();
+  const blogPosts: any = getAllPosts();
   let list: string = "";
   blogPosts.forEach((post: any) => {
     list += `
@@ -118,6 +130,7 @@ export async function RenderDelete(hx: boolean, domain: string) {
       domain: domain,
       footer: "xero harrison",
       content: rmList,
+      ripcache: Date.now(),
     });
   }
 }

@@ -29,8 +29,11 @@ Bun.serve({
         });
 
       case "/new":
-        form = "new";
-        return new Response(form, {
+        const html = await RenderResponse(
+          'you wanna blog?',
+          '<img src="https://0.xxe.ro/emacs.gif" alt="typing">'
+        );
+        return new Response(html, {
           headers: {
             "Content-Type": "text/html",
           },
@@ -61,23 +64,23 @@ Bun.serve({
               subtitle: editdata.get("subtitle"),
               excerpt: editdata.get("excerpt"),
               content: editdata.get("content"),
-              tags: editdata.getAll("tags").filter(function (el) {
+              tags: editdata.getAll("tags").filter(function(el) {
                 return el != "";
               }),
-              cats: editdata.getAll("cats").filter(function (el) {
+              cats: editdata.getAll("cats").filter(function(el) {
                 return el != "";
               }),
             };
-						updatePost(editpost);
-						const html = await RenderResponse("update complete", "nice!");
-            return new Response(
-              html,
-              {
-                headers: {
-                  "Content-Type": "text/html",
-                },
-              },
+            updatePost(editpost);
+            const html = await RenderResponse(
+              "update complete",
+              '<img src="https://0.xxe.ro/ok.gif" alt="ok">',
             );
+            return new Response(html, {
+              headers: {
+                "Content-Type": "text/html",
+              },
+            });
 
           case "GET":
             form = await RenderEdit(req.headers.has("HX-Request"), domain);
@@ -91,14 +94,15 @@ Bun.serve({
       case "/delete":
         if (req.method == "DELETE") {
           const post = await req.formData();
-          return new Response(
-            '<h1>RIP THAT POST &nbsp; <i class="nf nf-md-coffin"></i></h1>',
-            {
-              headers: {
-                "Content-Type": "text/html",
-              },
-            },
+          const html = await RenderResponse(
+            'RIP THAT POST <i class="nf nf-md-coffin"></i>',
+            '<img src="https://0.xxe.ro/delete.gif" alt="rip">',
           );
+          return new Response(html, {
+            headers: {
+              "Content-Type": "text/html",
+            },
+          });
         } else {
           form = await RenderDelete(req.headers.has("HX-Request"), domain);
           return new Response(form, {

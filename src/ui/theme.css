@@ -390,6 +390,11 @@ header {
         @apply font-extrabold text-xl bg-grey not-italic py-5 pl-0 pr-3 text-white;
       }
     }
+		ul.admin {
+			a {
+				@apply text-xl py-3;
+			}
+		}
     .tags,
     .feeds {
       @apply px-1;

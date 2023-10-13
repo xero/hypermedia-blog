@@ -292,22 +292,27 @@ header {
       button {
         @apply bg-black text-snow border-midnight border-2 rounded-none p-4 mb-6 ml-4 float-right;
       }
-      button.tag, button.cat {
+      button.tag,
+      button.cat {
         @apply bg-black text-snow border-midnight border-2 rounded-none p-2 my-2 mr-2 float-left;
       }
       button.tag::after {
         content: "\f0910";
         @apply text-red px-2;
       }
-			button.cat::after {
+      button.cat::after {
         @apply text-red px-2;
-				content: "\f0258";
-			}
+        content: "\f0258";
+      }
       input[type="checkbox"] {
         @apply inline-block p-2 m-1 bg-black border-midnight float-left;
       }
-      input:invalid {
+      input:invalid,
+      textarea:invalid {
         @apply border-crimson;
+      }
+      input:read-only {
+        @apply bg-charcoal text-fog border-black;
       }
       legend {
         @apply inline-block p-1 italic text-fog float-left;
@@ -390,11 +395,19 @@ header {
         @apply font-extrabold text-xl bg-grey not-italic py-5 pl-0 pr-3 text-white;
       }
     }
-		ul.admin {
-			a {
-				@apply text-xl py-3;
-			}
-		}
+    ul.admin {
+      li {
+        @apply my-2 py-2;
+
+        a {
+          @apply text-xl text-snow;
+
+          i {
+            @apply text-mainlyblue;
+          }
+        }
+      }
+    }
     .tags,
     .feeds {
       @apply px-1;

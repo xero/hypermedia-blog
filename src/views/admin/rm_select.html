@@ -5,7 +5,7 @@
 		<h3><label for="postList">select a post to delete:</label></h3>
 	</header>
 	<form hx-delete="/delete" hx-confirm="are you sure you want to delete this post?">
-		<input type="text" name="post_id" list="postList">
+		<input type="text" id="post_id" name="post_id" list="postList" placeholder="select a post...">
 		<datalist id="postList">
 			{{&list}}
 		</datalist>

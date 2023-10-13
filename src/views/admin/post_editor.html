@@ -4,7 +4,7 @@
 		<h2>edit post</h2>
 		<h3>{{&title}}</h3>
 	</header>
-	<form id="edit" hx-put="/edit">
+	<form id="edit" {{&form}}>
 		<input type="hidden" id="post_id" name="post_id" value="{{&post_id}}" />
 		<section class="flex-row">
 			<label for="date">date</label>

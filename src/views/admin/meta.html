@@ -1,0 +1,112 @@
+<title>edit meta</title>
+<article class="post edit" id="menu">
+	<header>
+		<h2>meta data</h2>
+		<h3></h3>
+	</header>
+	<nav>
+		<button class="cat" onclick="nav('newCat')">new category</button>
+		<button class="cat" onclick="nav('editCat')">edit category</button>
+		<button class="tag" onclick="nav('newTag')">new tag</button>
+		<button class="tag" onclick="nav('editTag')">edit tag</button>
+	</nav>
+</article>
+<article class="post edit hidden" id="newTag">
+	<form id="newtagmeta" hx-post="/meta/tag/new">
+		<section class="flex-row">
+			<label for="tagname">tag name:</label>
+			<input type="text" name="tagname" id="tagname" hx-on:keyup="sanitize('tag');" required>
+		</section>
+		<section class="flex-row" id="tagurlform">
+			<label for="tagurl">tag url:</label>
+			<input type="text" name="tagurl" id="tagurl" pattern="[0-9a-z_]+" readonly required>
+			<fieldset hx-on:click="customize('tag')">
+				<input type="checkbox" id="tagcustom">
+				<legend>custom?</legend>
+				<callout id="tagurlwarn"><i class="nf nf-fa-warning"></i> urls must be alphanumeric, lowercase, and underscored
+					only
+				</callout>
+			</fieldset>
+			<header>
+				<button type="submit" id="submitcaptain">add tag</button>
+			</header>
+		</section>
+	</form>
+</article>
+<article class="post edit hidden" id="newCat">
+	<form id="newcatmeta" hx-post="/meta/cat/new">
+		<section class="flex-row">
+			<label for="catname">category name:</label>
+			<input type="text" name="catname" id="catname" hx-on:keyup="sanitize('cat')" required>
+			<label for="caturl">category url:</label>
+			<input type="text" name="caturl" id="caturl" pattern="[0-9a-z_]+" readonly required>
+			<fieldset hx-on:click="customize('cat')">
+				<input type="checkbox" id="catcustom">
+				<legend>custom?</legend>
+				<callout id="caturlwarn"><i class="nf nf-fa-warning"></i> urls must be alphanumeric, lowercase, and underscored
+					only
+				</callout>
+			</fieldset>
+			<section class="flex-row">
+				<label for="catparent">parent category:</label>
+				<select id="catparent" name="catparent">
+					{{&parentCats}}
+				</select>
+			</section>
+			<header>
+				<button type="submit" id="dunereference">add category</button>
+			</header>
+		</section>
+	</form>
+</article>
+<article class="post edit hidden" id="editTag">
+	<form id="edittagmeta" hx-post="/meta/tag/edit">
+		<section class="flex-row">
+			<label for="edittag">select tag:</label>
+			<select id="edittag" name="edittag">
+				{{&tags}}
+			</select>
+			<header>
+				<button type="submit" id="thespice">edit tag</button>
+			</header>
+		</section>
+	</form>
+</article>
+<article class="post edit hidden" id="editCat">
+	<form id="editcatmeta" hx-post="/meta/cat/edit">
+		<section class="flex-row">
+			<label for="editcat">select category:</label>
+			<select id="editcat" name="editcat">
+				{{&cats}}
+			</select>
+			<header>
+				<button type="submit" id="mustflow">edit category</button>
+			</header>
+		</section>
+	</form>
+</article>
+<script>
+	function sanitize(type) {
+		if (!htmx.find("#" + type + "custom").checked) {
+			htmx.find("#" + type + "url").value = htmx.find("#" + type + "name").value.toString().trim().toLowerCase().replace(/ /g, "_").replace(/[^0-9a-z_]/g, "");
+		}
+	}
+	function customize(type) {
+		htmx.find("#" + type + "custom").toggleAttribute("checked");
+		htmx.find("#" + type + "url").toggleAttribute("readonly");
+		sanitize(type);
+	}
+	function nav(opt) {
+		htmx.removeClass(htmx.find("#newTag"), 'shown');
+		htmx.removeClass(htmx.find("#newCat"), 'shown');
+		htmx.removeClass(htmx.find("#editTag"), 'shown');
+		htmx.removeClass(htmx.find("#editCat"), 'shown');
+		htmx.addClass(htmx.find("#" + opt), 'shown');
+	}
+	htmx.onLoad(function (_) {
+		htmx.addClass(htmx.find("#newTag"), 'hidden');
+		htmx.addClass(htmx.find("#newCat"), 'hidden');
+		htmx.addClass(htmx.find("#editTag"), 'hidden');
+		htmx.addClass(htmx.find("#editCat"), 'hidden');
+	});
+</script>

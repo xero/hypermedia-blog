@@ -1,5 +1,6 @@
 import Mustache from "mustache";
 import {
+	BlogCats,
 	getCategories,
 	getPostByURL,
 	getTags,
@@ -154,9 +155,7 @@ export async function RenderDelete(hx: boolean, domain: string) {
 				<option value="${post.url}"/>`;
 	});
 	const listHtml = await getFile("rm_select");
-	const rmList: string = Mustache.render(listHtml, {
-		list: list,
-	});
+	const rmList: string = Mustache.render(listHtml, { list: list });
 	if (hx) {
 		return rmList;
 	} else {
@@ -168,4 +167,82 @@ export async function RenderDelete(hx: boolean, domain: string) {
 			ripcache: Date.now(),
 		});
 	}
+}
+
+export async function RenderMeta(hx: boolean, domain: string) {
+	const meta = await getFile("meta");
+	const metaForm: string = Mustache.render(meta, {
+		cats: () => {
+			let cats: string = '';
+			const allCats = getCategories();
+			allCats.forEach((cat) => {
+				cats += `<option value="${cat.url}">${cat.name}</option>`;
+			});
+			return cats;
+		},
+		parentCats: () => {
+			let cats: string = '<option value="0">none</option>';
+			const allCats = getCategories();
+			allCats.forEach((cat) => {
+				// top level categories only
+				if (cat.blog_cat_id % 1 == 0 && cat.name != "uncategorized") {
+					cats += `<option value="${cat.url}">${cat.name}</option>`;
+				}
+			});
+			return cats;
+		},
+		tags: () => {
+			let tags: string = "";
+			const allTags = getTags();
+			allTags.forEach((tag) => {
+				tags += `<option value="${tag.tag_id}">${tag.name}</option>`;
+			});
+			return tags;
+		},
+	});
+	if (hx) {
+		return metaForm;
+	} else {
+		const metaHtml = await getFile("main");
+		return Mustache.render(metaHtml, {
+			domain: domain,
+			footer: "xero harrison",
+			content: metaForm,
+			ripcache: Date.now(),
+		});
+	}
+}
+
+export async function RenderEditCat(cat: BlogCats) {
+	const editCat = await getFile("editCat");
+	const catForm: string = Mustache.render(editCat, {
+		catName: cat[0].name,
+		catUrl: cat[0].url,
+		catId: cat[0].cat_id,
+		blogCatId: cat[0].blog_cat_id,
+		parentCats: () => {
+			let selected: boolean = false;
+			let cats: string = `<option value="${cat[0].blog_cat_id}"`;
+			// check if already a top level category
+			if (Math.floor(cat[0].blog_cat_id) == cat[0].blog_cat_id) {
+				cats += ' selected="selected" ';
+				selected = true;
+			}
+			cats += '>none</option>';
+			const allCats = getCategories();
+			allCats.forEach((pcat) => {
+				// top level categories only
+				if (pcat.blog_cat_id % 1 == 0 && pcat.name != "uncategorized") {
+					cats += `<option value="${pcat.blog_cat_id}"`;
+					if (!selected && Math.floor(cat[0].blog_cat_id) == Math.floor(pcat.blog_cat_id)) {
+						cats += ' selected="selected" ';
+						selected = true;
+					}
+					cats += `>${pcat.name}</option>`;
+				}
+			});
+			return cats;
+		},
+	});
+	return catForm;
 }

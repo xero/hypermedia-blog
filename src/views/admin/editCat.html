@@ -1,0 +1,29 @@
+<article class="post edit" id="editCat">
+	<title>edit category: {{&catName}}</title>
+	<form id="newcatmeta" hx-put="/meta/cat/edit">
+		<section class="flex-row">
+			<label for="catname">category name:</label>
+			<input type="text" name="catname" value="{{&catName}}" id="catname" hx-on:keyup="sanitize('cat')" required>
+			<label for="caturl">category url:</label>
+			<input type="text" name="caturl" id="caturl" value="{{&catUrl}}" pattern="[0-9a-z_]+" readonly required>
+			<fieldset hx-on:click="customize('cat')">
+				<input type="checkbox" id="catcustom">
+				<legend>custom?</legend>
+				<callout id="caturlwarn"><i class="nf nf-fa-warning"></i> urls must be alphanumeric, lowercase, and underscored
+					only
+				</callout>
+			</fieldset>
+			<section class="flex-row">
+				<label for="catparent">parent category:</label>
+				<select id="catparent" name="catparent">
+					{{&parentCats}}
+				</select>
+			</section>
+			<header>
+				<input type="hidden" id="catid" name="catid" value="{{&catId}}">
+				<input type="hidden" id="blogcatid" name="blogcatid" value="{{&blogCatId}}">
+				<button type="submit" id="dunereference">update category</button>
+			</header>
+		</section>
+	</form>
+</article>

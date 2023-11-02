@@ -1,5 +1,9 @@
 import {
+	addCat,
 	addPost,
+	addTag,
+	checkCat,
+	modCat,
 	modPost,
 	rmPost,
 } from "./models/admin.js";
@@ -7,8 +11,10 @@ import { getPostByURL } from "./models/blog.js";
 import {
 	RenderDelete,
 	RenderEdit,
+	RenderEditCat,
 	RenderEditForm,
 	RenderForm,
+	RenderMeta,
 	RenderNewForm,
 	RenderResponse,
 } from "./views/admin/admin.js";
@@ -16,7 +22,7 @@ import {
 const domain: string = "https://xero.0w.nz";
 
 Bun.serve({
-	port: 8888,
+	port: 8999,
 	hostname: "xero.0w.nz",
 	tls: {
 		cert: Bun.file("/etc/ssl/private/letsencrypt-domain.pem"),
@@ -65,7 +71,7 @@ Bun.serve({
 						addPost(newpost);
 						const html = await RenderResponse(
 							"new post saved!",
-              '<img src="https://0.xxe.ro/adventure-5.gif" alt="high five!">'
+							'<img src="https://0.xxe.ro/adventure-5.gif" alt="high five!">'
 						);
 						return new Response(html, {
 							headers: {
@@ -128,7 +134,7 @@ Bun.serve({
 
 			case "/delete":
 				if (req.method == "DELETE") {
-					const post:any = await req.formData();
+					const post: any = await req.formData();
 					const id = getPostByURL(post.get("post_id")?.toString());
 					rmPost(id[0].post_id);
 					const html = await RenderResponse(
@@ -147,6 +153,77 @@ Bun.serve({
 							"Content-Type": "text/html",
 						},
 					});
+				}
+
+			case "/meta":
+				form = await RenderMeta(req.headers.has("HX-Request"), domain);
+				return new Response(form, {
+					headers: {
+						"Content-Type": "text/html",
+					},
+				});
+
+			case "/meta/tag/new":
+				const newTag: any = await req.formData();
+				const tagName = newTag.get("tagname")?.toString();
+				const tagUrl = newTag.get("tagurl")?.toString();
+				addTag(tagName, tagUrl);
+				const newTagHtml = await RenderResponse(
+					'created new tag: <em>' + tagName + '</em>',
+					'<img src="https://0.xxe.ro/ok.gif" alt="ok">',
+				);
+				return new Response(newTagHtml, {
+					headers: {
+						"Content-Type": "text/html",
+					},
+				});
+
+			case "/meta/cat/new":
+				const newCat: any = await req.formData();
+				const catName = newCat.get("catname")?.toString();
+				const catUrl = newCat.get("caturl")?.toString();
+				const catParent = parseInt(newCat.get("catparent")?.toString());
+				addCat(catName, catUrl, catParent);
+				const newCatHtml = await RenderResponse(
+					'created new category: <em>' + catName + '</em>',
+					'<img src="https://0.xxe.ro/ok.gif" alt="ok">',
+				);
+				return new Response(newCatHtml, {
+					headers: {
+						"Content-Type": "text/html",
+					},
+				});
+
+			case "/meta/cat/edit":
+				switch (req.method) {
+					case "POST":
+						const catForm: any = await req.formData();
+						const editCat = catForm.get("editcat")?.toString();
+						const catInfo = checkCat(editCat);
+						form = await RenderEditCat(catInfo);
+						return new Response(form, {
+							headers: {
+								"Content-Type": "text/html",
+							},
+						});
+
+					case "PUT":
+						const editCatForm: any = await req.formData();
+						const editblogCatId = editCatForm.get("blogcatid")?.toString();
+						const editCatId = editCatForm.get("catid")?.toString();
+						const editCatName = editCatForm.get("catname")?.toString();
+						const editCatUrl = editCatForm.get("caturl")?.toString();
+						const editCatParent = editCatForm.get("catparent")?.toString();
+						modCat(editCatId, editblogCatId, editCatParent, editCatName, editCatUrl);
+						const editCatHtml = await RenderResponse(
+							'category edited: <em>' + editCatName + '</em>',
+							'<img src="https://0.xxe.ro/ok.gif" alt="ok">',
+						);
+						return new Response(editCatHtml, {
+							headers: {
+								"Content-Type": "text/html",
+							},
+						});
 				}
 
 			default:

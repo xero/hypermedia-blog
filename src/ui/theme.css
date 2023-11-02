@@ -275,10 +275,14 @@ header {
       form section {
         @apply mb-6;
       }
+      select,
       textarea,
       input[type="text"],
       input[type="date"] {
         @apply bg-black text-snow border-midnight border-2 rounded-none p-4 w-full my-2;
+      }
+      select {
+        @apply p-5 text-lg;
       }
       #excerpt {
         height: 300px;
@@ -304,11 +308,28 @@ header {
         @apply text-red px-2;
         content: "\f0258";
       }
+			nav {
+				button {
+					@apply float-left;
+				}
+				button.cat::before {
+					@apply text-blue px-2;
+					content: "\f0770";
+				}
+				button.tag::before {
+					content: "\f1224";
+					@apply text-blue px-2;
+				}
+				button.cat::after,
+				button.tag::after {
+					content: '' !important;
+				}
+			}
       input[type="checkbox"] {
         @apply inline-block p-2 m-1 bg-black border-midnight float-left;
       }
-      input:invalid,
-      textarea:invalid {
+      input:is(:focus:invalid),
+      textarea:is(:focus:invalid) {
         @apply border-crimson;
       }
       input:read-only {
@@ -317,8 +338,13 @@ header {
       legend {
         @apply inline-block p-1 italic text-fog float-left;
       }
-      callout {
-        @apply bg-midnight text-crimson italic text-base py-2 px-4 mx-1 invisible;
+      form:is(:invalid):focus-within callout {
+        @apply font-bold text-crimson italic text-base py-3 px-4 mx-1 !visible;
+				text-shadow: 2px 3px #111;
+      }
+      form:is(:valid):focus-within callout,
+			form:not(:focus-within) callout {
+				@apply !invisible !hidden;
       }
       footer.meta {
         @apply text-xs text-white mt-0 mb-6 mr-0 ml-0 inline-block w-full bg-transparent bg-no-repeat overflow-hidden;

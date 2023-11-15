@@ -26,7 +26,7 @@ const domain: string = "//localhost"; // no trailing slash
 
 Bun.serve({
 	port: 8999,
-	hostname: "localhost"
+	hostname: "localhost",
 	/*
 	 * ssl example
 	tls: {

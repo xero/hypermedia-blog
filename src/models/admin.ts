@@ -289,7 +289,7 @@ WHERE blog_cat_id = $id;
 			});
 		} else {
 			let count: any = db.query(`
-SELECT COUNT(blog_cat_id) as count
+SELECT COUNT(cat_id) as count
 FROM blog_categories
 WHERE blog_cat_id > $parent
 AND blog_cat_id < $next;

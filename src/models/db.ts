@@ -4,9 +4,9 @@ import { Database } from "bun:sqlite";
  *  |_ /\ |   \_/ | \ | __)
  */
 export const db = new Database("src/db.sqlite", { readonly: true });
-export const isEmpty = (val:any):boolean => {
-  return val && Object.keys(val).length === 0;
+export const isEmpty = (val: any): boolean => {
+	return val && Object.keys(val).length === 0;
 }
-export const quit = () :void => {
-  db.close();
+export const quit = (): void => {
+	db.close();
 };

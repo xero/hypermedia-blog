@@ -11,16 +11,16 @@ the scripts loops through the database creating both fully rendered html documen
 
 # screenshots
 
-rendered post
+### rendered post
 ![blog](https://github.com/xero/hypermedia-blog/assets/227907/f300fe21-98c6-4311-afa5-cc9c7f0d102d)
 
-backend post editor
+### backend post editor
 ![editor](https://github.com/xero/hypermedia-blog/assets/227907/912d2124-d06e-42e7-af5f-0555ad771360)
 
-editor meta
+### editor metadata tagging
 ![editor_meta](https://github.com/xero/hypermedia-blog/assets/227907/111a500c-3458-42fe-9e58-dea31a38d9fd)
 
-editor categories
+### backend category editing
 ![edit_cat](https://github.com/xero/hypermedia-blog/assets/227907/c92ed809-2586-4b5c-add1-5d32c085b3ed)
 
 ### building
@@ -54,7 +54,7 @@ the web based wysiwyg editor can be accessed by running `bun edit`. the editor s
 
 ### web server
 
-nginx sample configs are availble in the [nginx directory](https://github.com/xero/hypermedia-blog/tree/main/nginx) . the only real __"magic"__ is appending to the root directory on the existence of the hx-request header in the [sites-available example](https://github.com/xero/hypermedia-blog/blob/main/nginx/sites-available#L9).
+nginx sample configs are available in the [nginx directory](https://github.com/xero/hypermedia-blog/tree/main/nginx) . the only real __"magic"__ is appending to the root directory on the existence of the hx-request header in the [sites-available example](https://github.com/xero/hypermedia-blog/blob/main/nginx/sites-available#L9).
 
 # status
 
@@ -74,7 +74,7 @@ core features are working. actual posts need a bit more formatting. the admin ba
 
 (i was thinking about calling this project **TNTHUMBS** b/c it's built using: [t](https://typescriptlang.org)ypescript [n](https://nginx.org)ginx [t](https://tailwindcss.com)ailwindcss [h](https://htmx.org)tmx [u](https://unix.org)nix [m](https://mustache.github.io)ustache [b](https://bun.sh)un [s](https://sqlite.org/)qlite)
 
-> please note, i'm doing this project to learn some of these technologies, so i'm undoubtly doing it wrong in a lot of places. suggestions & pr's are always welcome.
+> please note, i'm doing this project to learn some of these technologies, so i'm undoubtedly doing it wrong in a lot of places. suggestions & pr's are always welcome.
 
 # references
 

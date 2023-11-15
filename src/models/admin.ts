@@ -30,7 +30,7 @@ export const checkTag = (tag: string): any => {
 	const results: any = db
 		.query(`
 SELECT * FROM blog_tags
-WHERE url = $tag or name = $tag
+WHERE url = $tag or name = $tag or tag_id = $tag
 LIMIT 1;
     `).all({ $tag: tag });
 	return results;
@@ -67,7 +67,7 @@ WHERE blog_cat_id > $parent
 AND blog_cat_id < $next;
 `).all({
 			$parent: parent,
-			$next: parent+1,
+			$next: parent + 1,
 		});
 
 		count = count[0]["count"];
@@ -263,6 +263,18 @@ WHERE post_id = $id;
 	});
 };
 
+export const modTag = (tag_id: number, tag_name: string, tag_url: string) => {
+	db.query(`
+UPDATE blog_tags
+SET name = $name, url = $url
+WHERE tag_id = $id;
+	`).all({
+		$name: tag_name,
+		$url: tag_url,
+		$id: tag_id,
+	});
+}
+
 export const modCat = (cat_id: number, blog_cat_id: number, parent_cat_id: number, cat_name: string, cat_url: string) => {
 	if (parent_cat_id != 0) {
 		if (Math.floor(blog_cat_id) == Math.floor(parent_cat_id)) {
@@ -276,26 +288,26 @@ WHERE blog_cat_id = $id;
 				$id: blog_cat_id,
 			});
 		} else {
-		let count: any = db.query(`
-SELECT COUNT(cat_id) as count
+			let count: any = db.query(`
+SELECT COUNT(blog_cat_id) as count
 FROM blog_categories
 WHERE blog_cat_id > $parent
 AND blog_cat_id < $next;
 `).all({
-			$parent: parent_cat_id,
-			$next: Math.floor(parent_cat_id+1),
-		});
+				$parent: parent_cat_id,
+				$next: Math.floor(parent_cat_id + 1),
+			});
 
-		count = count[0]["count"];
-		const newId:number = Math.floor(parent_cat_id) + ((count + 1) * 0.001);
-		db.query(`
+			count = count[0]["count"];
+			const newId: number = Math.floor(parent_cat_id) + ((count + 1) * 0.001);
+			db.query(`
 UPDATE blog_categories
 SET blog_cat_id = $catID
 WHERE cat_id = $id;
 `).all({
-			$catID: newId,
-			$id: cat_id,
-		});
+				$catID: newId,
+				$id: cat_id,
+			});
 		}
 	} else {
 		db.query(`

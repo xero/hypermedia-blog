@@ -1,6 +1,7 @@
 import Mustache from "mustache";
 import {
 	BlogCats,
+	BlogTags,
 	getCategories,
 	getPostByURL,
 	getTags,
@@ -213,8 +214,18 @@ export async function RenderMeta(hx: boolean, domain: string) {
 	}
 }
 
+export async function RenderEditTag(tag: BlogTags) {
+	const editTag = await getFile("edit_tag");
+	const tagForm: string = Mustache.render(editTag, {
+		tagName: tag[0].name,
+		tagUrl: tag[0].url,
+		tagId: tag[0].tag_id,
+	});
+	return tagForm;
+}
+
 export async function RenderEditCat(cat: BlogCats) {
-	const editCat = await getFile("editCat");
+	const editCat = await getFile("edit_cat");
 	const catForm: string = Mustache.render(editCat, {
 		catName: cat[0].name,
 		catUrl: cat[0].url,

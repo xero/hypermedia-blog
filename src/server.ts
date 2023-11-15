@@ -3,8 +3,10 @@ import {
 	addPost,
 	addTag,
 	checkCat,
+	checkTag,
 	modCat,
 	modPost,
+	modTag,
 	rmPost,
 } from "./models/admin.js";
 import { getPostByURL } from "./models/blog.js";
@@ -13,6 +15,7 @@ import {
 	RenderEdit,
 	RenderEditCat,
 	RenderEditForm,
+	RenderEditTag,
 	RenderForm,
 	RenderMeta,
 	RenderNewForm,
@@ -194,6 +197,38 @@ Bun.serve({
 					},
 				});
 
+			case "/meta/tag/edit":
+				switch (req.method) {
+					case "POST":
+						const tagForm: any = await req.formData();
+						const editTag = tagForm.get("edittag")?.toString();
+						const tagInfo = checkTag(editTag);
+						form = await RenderEditTag(tagInfo);
+						return new Response(form, {
+							headers: {
+								"Content-Type": "text/html",
+							},
+						});
+
+					case "PUT":
+						const editTagForm: any = await req.formData();
+						const editTagName: string = editTagForm.get("tagname")?.toString();
+						modTag(
+							editTagForm.get("tagid")?.toString(),
+							editTagName,
+							editTagForm.get("tagurl")?.toString()
+						);
+						const editTagHtml = await RenderResponse(
+							'category edited: <em>' + editTagName + '</em>',
+							'<img src="https://0.xxe.ro/ok.gif" alt="ok">',
+						);
+						return new Response(editTagHtml, {
+							headers: {
+								"Content-Type": "text/html",
+							},
+						});
+				}
+
 			case "/meta/cat/edit":
 				switch (req.method) {
 					case "POST":
@@ -209,12 +244,14 @@ Bun.serve({
 
 					case "PUT":
 						const editCatForm: any = await req.formData();
-						const editblogCatId = editCatForm.get("blogcatid")?.toString();
-						const editCatId = editCatForm.get("catid")?.toString();
 						const editCatName = editCatForm.get("catname")?.toString();
-						const editCatUrl = editCatForm.get("caturl")?.toString();
-						const editCatParent = editCatForm.get("catparent")?.toString();
-						modCat(editCatId, editblogCatId, editCatParent, editCatName, editCatUrl);
+						modCat(
+							editCatForm.get("catid")?.toString(),
+							editCatForm.get("blogcatid")?.toString(),
+							editCatForm.get("catparent")?.toString(),
+							editCatName,
+							editCatForm.get("caturl")?.toString(),
+						);
 						const editCatHtml = await RenderResponse(
 							'category edited: <em>' + editCatName + '</em>',
 							'<img src="https://0.xxe.ro/ok.gif" alt="ok">',

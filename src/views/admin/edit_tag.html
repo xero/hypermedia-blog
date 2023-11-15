@@ -1,0 +1,22 @@
+<article class="post edit" id="edittag">
+	<title>edit tag: {{&tagName}}</title>
+	<form id="newtagmeta" hx-put="/meta/tag/edit">
+		<section class="flex-row">
+			<label for="tagname">tag name:</label>
+			<input type="text" name="tagname" value="{{&tagName}}" id="tagname" hx-on:keyup="sanitize('tag')" required>
+			<label for="tagurl">tag url:</label>
+			<input type="text" name="tagurl" id="tagurl" value="{{&tagUrl}}" pattern="[0-9a-z_]+" readonly required>
+			<fieldset hx-on:click="customize('tag')">
+				<input type="checkbox" id="tagcustom">
+				<legend>custom?</legend>
+				<callout id="tagurlwarn"><i class="nf nf-fa-warning"></i> urls must be alphanumeric, lowercase, and underscored
+					only
+				</callout>
+			</fieldset>
+			<header>
+				<input type="hidden" id="tagid" name="tagid" value="{{&tagId}}">
+				<button type="submit" id="dunereference">update tagegory</button>
+			</header>
+		</section>
+	</form>
+</article>

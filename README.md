@@ -49,18 +49,18 @@ the main stylesheet is here: [src/ui/theme.css](https://github.com/xero/static-b
 there are 2 files which define the global domains used. one is for the [backend editor](https://github.com/xero/hypermedia-blog/blob/main/src/server.ts#L25) the other [the blog itself](https://github.com/xero/hypermedia-blog/blob/main/src/index.ts#L28). they default to `//localhost` for http fallback support.
 
 ### backend editor
-
-the web based wysiwyg editor can be accessed by running `bun edit`. the editor support adding, editing, and removing posts as well and categories and tags. the default port and hostname (localhost:8999) can be changed in: [src/server.ts](https://github.com/xero/hypermedia-blog/blob/main/src/server.ts#L28).
+g
+the web based wysiwyg editor can be accessed by running `bun edit`. the editor supports adding, editing, and removing posts and their meta data, as well as the categories and tags themselves. the default port and hostname (localhost:8999) can be changed in: [src/server.ts](https://github.com/xero/hypermedia-blog/blob/main/src/server.ts#L28).
 
 ### web server
 
-nginx sample configs are available in the [nginx directory](https://github.com/xero/hypermedia-blog/tree/main/nginx) . the only real __"magic"__ is appending to the root directory on the existence of the hx-request header in the [sites-available example](https://github.com/xero/hypermedia-blog/blob/main/nginx/sites-available#L9).
+nginx sample configs are available in the [nginx directory](https://github.com/xero/hypermedia-blog/tree/main/nginx) . the only real _"magic"_ is appending to the root directory on the existence of the hx-request header in the [sites-available example](https://github.com/xero/hypermedia-blog/blob/main/nginx/sites-available#L9).
 
 # status
 
 demo build at [https://xero.0w.nz](https://xero.0w.nz)
 
-core features are working. actual posts need a bit more formatting. the admin backend working great, test it out locally! project is under active dev, so the demo site may be broken at any time.
+core features are working. actual posts need a bit more formatting. the admin backend works great, test it out locally! project is under active dev, so the demo site may be broken at any time.
 
 ## todo & ideas
 

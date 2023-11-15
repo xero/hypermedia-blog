@@ -25,7 +25,7 @@ import {
  *  \  / /\  |_) (_
  *   \/ /--\ | \ __)
  */
-const domain:string = "https://xero.0w.nz"; // no trailing slash
+const domain:string = "//localhost"; // no trailing slash
 const title:string = "blog.x-e.ro /";
 const postsPerPage:number = 7;
 

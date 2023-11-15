@@ -22,15 +22,18 @@ import {
 	RenderResponse,
 } from "./views/admin/admin.js";
 
-const domain: string = "https://xero.0w.nz";
+const domain: string = "//localhost"; // no trailing slash
 
 Bun.serve({
 	port: 8999,
-	hostname: "xero.0w.nz",
+	hostname: "localhost"
+	/*
+	 * ssl example
 	tls: {
 		cert: Bun.file("/etc/ssl/private/letsencrypt-domain.pem"),
 		key: Bun.file("/etc/ssl/private/letsencrypt-domain.key"),
 	},
+	*/
 	async fetch(req) {
 		const url = new URL(req.url);
 		let form: string;

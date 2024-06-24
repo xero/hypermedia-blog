@@ -4,7 +4,7 @@
 	"type": "module",
 	"devDependencies": {
 		"@types/mustache": "^4.2.2",
-		"autoprefixer": "^10.4.15",
+		"autoprefixer": "^10.4.19",
 		"bun-types": "latest",
 		"cssnano": "^6.0.1",
 		"htmx.org": "^1.9.6",
@@ -24,5 +24,8 @@
 		"htmx": "bun src/index.ts",
 		"edit": "sudo bun --hot run src/server.ts",
 		"start": "bun run init &&  bun run css && bun run htmx"
+	},
+	"dependencies": {
+		"update-browserslist-db": "^1.0.16"
 	}
 }

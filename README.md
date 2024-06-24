@@ -64,8 +64,6 @@ core features are working. actual posts need a bit more formatting. the admin ba
 
 ## todo & ideas
 
-* database house keeping
-    * post cleanup (blockquotes, code, image urls, etc)
 * nginx alternatives (e.g. [caddy](https://caddyserver.com/docs/caddyfile/matchers))
     * nginx hx-header "root rewrite" vs inline hx-get to slug urls perf testing
 * idk, maybe actual blogging?     •͡˘㇁•͡

@@ -19,6 +19,7 @@ export type BlogTags = {
 
 export type BlogMeta = {
 	main: BlogCats;
+	base: BlogCats;
 	cats: BlogCats;
 	tags: BlogTags;
 };
@@ -90,7 +91,7 @@ WHERE m.blog_id = $post_id AND m.meta_key = "category";
 	return results;
 };
 
-export const getMainCat = (cat_id: number): BlogCats => {
+export const getMainCat = (cat_id: number, parent:boolean): BlogCats => {
 	const results: any = db
 		.query(
 			`
@@ -99,7 +100,7 @@ FROM blog_categories
 WHERE blog_cat_id = $cat_id LIMIT 0,1;
 `,
 		)
-		.all({ $cat_id: Math.floor(cat_id) });
+		.all({ $cat_id: parent ? Math.floor(cat_id) : cat_id });
 	if (isEmpty(results)) {
 		return [
 			{
@@ -350,8 +351,9 @@ export const getPostByURL = (url: string): BlogPost => {
 	post.forEach((post) => {
 		const cats = getPostCats(post.post_id);
 		const tags = getPostTags(post.post_id);
-		const main = getMainCat(cats[0].blog_cat_id);
-		post.meta = { cats, tags, main };
+		const main = getMainCat(cats[0].blog_cat_id, true);
+		const base = getMainCat(cats[0].blog_cat_id, false);
+		post.meta = { cats, tags, main, base };
 	});
 	return post;
 };
@@ -361,8 +363,9 @@ export const getPosts = (limit: number, offset: number): BlogPost => {
 	posts.forEach((post) => {
 		const cats = getPostCats(post.post_id);
 		const tags = getPostTags(post.post_id);
-		const main = getMainCat(cats[0].blog_cat_id);
-		post.meta = { cats, tags, main };
+		const main = getMainCat(cats[0].blog_cat_id, true);
+		const base = getMainCat(cats[0].blog_cat_id, false);
+		post.meta = { cats, tags, main, base };
 	});
 	return posts;
 };
@@ -376,8 +379,9 @@ export const getPostsByCatID = (
 	posts.forEach((post: any) => {
 		const cats = getPostCats(post.post_id);
 		const tags = getPostTags(post.post_id);
-		const main = getMainCat(cats[0].blog_cat_id);
-		post.meta = { cats, tags, main };
+		const main = getMainCat(cats[0].blog_cat_id, true);
+		const base = getMainCat(cats[0].blog_cat_id, false);
+		post.meta = { cats, tags, main, base };
 	});
 	return posts;
 };
@@ -391,8 +395,9 @@ export const getPostsBySubCatID = (
 	posts.forEach((post: any) => {
 		const cats = getPostCats(post.post_id);
 		const tags = getPostTags(post.post_id);
-		const main = getMainCat(cats[0].blog_cat_id);
-		post.meta = { cats, tags, main };
+		const main = getMainCat(cats[0].blog_cat_id, true);
+		const base = getMainCat(cats[0].blog_cat_id, false);
+		post.meta = { cats, tags, main, base };
 	});
 	return posts;
 };
@@ -406,8 +411,9 @@ export const getPostsByTagID = (
 	posts.forEach((post: any) => {
 		const cats = getPostCats(post.post_id);
 		const tags = getPostTags(post.post_id);
-		const main = getMainCat(cats[0].blog_cat_id);
-		post.meta = { cats, tags, main };
+		const main = getMainCat(cats[0].blog_cat_id, true);
+		const base = getMainCat(cats[0].blog_cat_id, false);
+		post.meta = { cats, tags, main, base };
 	});
 	return posts;
 };

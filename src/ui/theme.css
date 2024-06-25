@@ -30,14 +30,14 @@ body {
 }
 .floatLeft,
 p.floatLeft {
-	@apply !float-left inline-flex px-1;
+  @apply !float-left inline-flex px-1;
 }
 .floatRight,
 p.floatRight {
-	@apply !float-right inline-flex px-1;
+  @apply !float-right inline-flex px-1;
 }
 center {
-	@apply block text-center mx-auto;
+  @apply block text-center mx-auto;
 }
 .art.title,
 .code.title,
@@ -157,7 +157,10 @@ center {
   @apply text-fog;
 }
 .uncategorized p a {
-	border-bottom: 1px solid #000;
+  border-bottom: 1px solid #000;
+}
+.admin {
+	width: 100% !important;
 }
 
 header {
@@ -221,6 +224,7 @@ header {
 #loading {
   @apply fixed block p-3 ml-8;
   background: #222 url(img/hash.png);
+  pointer-events: none;
   z-index: 999;
   top: 10px;
 
@@ -254,8 +258,12 @@ header {
       p {
         @apply text-sm my-4;
       }
-      img {
+      img,
+      video,
+      iframe {
         @apply my-2;
+        max-width: 380px !important;
+        max-height: auto;
       }
       h3.read {
         @apply text-lg p-4;
@@ -336,23 +344,23 @@ header {
         @apply text-red px-2;
         content: "\f0258";
       }
-			nav {
-				button {
-					@apply float-left;
-				}
-				button.cat::before {
-					@apply text-blue px-2;
-					content: "\f0770";
-				}
-				button.tag::before {
-					content: "\f1224";
-					@apply text-blue px-2;
-				}
-				button.cat::after,
-				button.tag::after {
-					content: '' !important;
-				}
-			}
+      nav {
+        button {
+          @apply float-left;
+        }
+        button.cat::before {
+          @apply text-blue px-2;
+          content: "\f0770";
+        }
+        button.tag::before {
+          content: "\f1224";
+          @apply text-blue px-2;
+        }
+        button.cat::after,
+        button.tag::after {
+          content: "" !important;
+        }
+      }
       input[type="checkbox"] {
         @apply inline-block p-2 m-1 bg-black border-midnight float-left;
       }
@@ -368,11 +376,11 @@ header {
       }
       form:is(:invalid):focus-within callout {
         @apply font-bold text-crimson italic text-base py-3 px-4 mx-1 !visible;
-				text-shadow: 2px 3px #111;
+        text-shadow: 2px 3px #111;
       }
       form:is(:valid):focus-within callout,
-			form:not(:focus-within) callout {
-				@apply !invisible !hidden;
+      form:not(:focus-within) callout {
+        @apply !invisible !hidden;
       }
       footer.meta {
         @apply text-xs text-white mt-0 mb-6 mr-0 ml-0 inline-block w-full bg-transparent bg-no-repeat overflow-hidden;
@@ -557,7 +565,35 @@ footer {
     }
   }
 }
-/* screen(md) */
+
+@media (min-width: 500px) {
+  #main {
+    #content {
+      article {
+        img,
+        video,
+        iframe {
+          max-width: 550px !important;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 600px) {
+  #main {
+    #content {
+      article {
+        img,
+        video,
+        iframe {
+          max-width: 740px !important;
+        }
+      }
+    }
+  }
+}
+
 @media (min-width: 768px) {
   header {
     nav {
@@ -643,12 +679,19 @@ footer {
 
       article {
         max-width: 750px;
-				h2 {
-					@apply !text-2xl;
-				}
-				h3 {
-					@apply !text-xl;
-				}
+        margin: 0 auto;
+
+        img,
+        video,
+        iframe {
+          max-width: 590px !important;
+        }
+        h2 {
+          @apply !text-2xl;
+        }
+        h3 {
+          @apply !text-xl;
+        }
         p {
           @apply !text-base my-5;
         }
@@ -703,7 +746,7 @@ footer {
     }
   }
 }
-/* screen(lg) */
+
 @media (min-width: 1024px) {
   header {
     #linx {
@@ -762,12 +805,17 @@ footer {
       @apply !flex-col !basis-2/3;
 
       article {
-				h2 {
-					@apply !text-3xl;
-				}
-				h3 {
-					@apply !text-2xl;
-				}
+        img,
+        video,
+        iframe {
+          max-width: 100% !important;
+        }
+        h2 {
+          @apply !text-3xl;
+        }
+        h3 {
+          @apply !text-2xl;
+        }
         p {
           @apply !text-base my-5;
         }

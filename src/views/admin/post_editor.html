@@ -12,7 +12,7 @@
 		</section>
 		<section class="flex-row">
 			<label for="url">url</label>
-			<input type="text" name="url" id="url" value="{{&url}}" required pattern="[0-9a-z_]+"
+			<input type="text" name="url" id="url" value="{{&url}}" maxlength="50" required pattern="[0-9a-z_]+"
 				onkeydown="return event.key != 'Enter';" readonly />
 			<fieldset hx-on:click="customize()">
 				<input type="checkbox" id="custom" />
@@ -23,17 +23,17 @@
 		</section>
 		<section class="flex-row">
 			<label for="title">title</label>
-			<input type="text" name="title" id="title" value="{{&title}}" hx-on:keyup="sanitize()" required
+			<input type="text" name="title" id="title" value="{{&title}}" maxlength="300" hx-on:keyup="sanitize()" required
 				onkeydown="return event.key != 'Enter';" hx-target="#url_warn" />
 		</section>
 		<section class="flex-row">
 			<label for="subtitle">subtitle</label>
-			<input type="text" name="subtitle" id="subtitle" value="{{&subtitle}}" required
+			<input type="text" name="subtitle" id="subtitle" value="{{&subtitle}}" maxlength="300" required
 				onkeydown="return event.key != 'Enter';" />
 		</section>
 		<section class="flex-row">
 			<label for="excerpt">excerpt</label>
-			<textarea id="excerpt" name="excerpt" required>{{&excerpt}}</textarea>
+			<textarea id="excerpt" name="excerpt" maxlength="1000" required>{{&excerpt}}</textarea>
 		</section>
 		<section class="flex-row">
 			<label for="content">content</label>

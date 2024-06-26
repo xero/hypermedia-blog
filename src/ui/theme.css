@@ -160,7 +160,7 @@ center {
   border-bottom: 1px solid #000;
 }
 .admin {
-	width: 100% !important;
+  width: 100% !important;
 }
 
 header {
@@ -260,7 +260,9 @@ header {
       }
       img,
       video,
-      iframe {
+      iframe,
+      pre,
+      code {
         @apply my-2;
         max-width: 380px !important;
         max-height: auto;
@@ -277,8 +279,9 @@ header {
       }
       pre,
       code {
-        @apply bg-black p-3 my-4 overflow-auto;
+        @apply bg-black p-3 my-4 overflow-auto text-sm;
         page-break-inside: avoid;
+        max-width: 380px !important;
         line-height: 1.4;
       }
       pre > code,
@@ -304,6 +307,7 @@ header {
         background-image: url(img/arrow-dark-half.png);
         background-repeat: no-repeat;
         background-position: 20px 0;
+        min-height: 20px;
       }
       blockquote cite:before {
         content: "";
@@ -513,7 +517,10 @@ header {
         @apply pr-0;
 
         i {
-          @apply text-5xl text-snow;
+          @apply mr-2 text-3xl text-fog;
+        }
+        a {
+          @apply text-xl text-snow;
         }
       }
       .list {
@@ -572,7 +579,9 @@ footer {
       article {
         img,
         video,
-        iframe {
+        iframe,
+        code,
+        pre {
           max-width: 550px !important;
         }
       }
@@ -586,7 +595,10 @@ footer {
       article {
         img,
         video,
-        iframe {
+        iframe,
+        code,
+        pre {
+          @apply text-sm;
           max-width: 740px !important;
         }
       }
@@ -675,15 +687,15 @@ footer {
 
     #content {
       @apply !flex-col !basis-2/3;
-      margin-left: auto;
+      margin: 0 auto;
 
       article {
         max-width: 750px;
-        margin: 0 auto;
 
         img,
         video,
-        iframe {
+        iframem code,
+        pre {
           max-width: 590px !important;
         }
         h2 {
@@ -807,7 +819,10 @@ footer {
       article {
         img,
         video,
-        iframe {
+        iframe,
+        code,
+        pre {
+          @apply text-base;
           max-width: 100% !important;
         }
         h2 {

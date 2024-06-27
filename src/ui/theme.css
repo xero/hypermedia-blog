@@ -676,12 +676,6 @@ footer {
     }
   }
 
-  #loading {
-    h1 {
-      @apply text-2xl;
-    }
-  }
-
   #main {
     @apply !m-6 !px-2 !py-10;
 
@@ -801,12 +795,6 @@ footer {
       width: 394px !important;
       height: 172px !important;
       margin-left: 5% !important;
-    }
-  }
-
-  #loading {
-    h1 {
-      @apply text-3xl;
     }
   }
 

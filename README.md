@@ -49,7 +49,7 @@ the main stylesheet is here: [src/ui/theme.css](https://github.com/xero/static-b
 there are 2 files which define the global domains used. one is for the [backend editor](https://github.com/xero/hypermedia-blog/blob/main/src/server.ts#L25) the other [the blog itself](https://github.com/xero/hypermedia-blog/blob/main/src/index.ts#L28). they default to `//localhost` for http fallback support.
 
 ### backend editor
-g
+
 the web based wysiwyg editor can be accessed by running `bun edit`. the editor supports adding, editing, and removing posts and their meta data, as well as the categories and tags themselves. the default port and hostname (localhost:8999) can be changed in: [src/server.ts](https://github.com/xero/hypermedia-blog/blob/main/src/server.ts#L28).
 
 ### web server
@@ -58,9 +58,7 @@ nginx sample configs are available in the [nginx directory](https://github.com/x
 
 # status
 
-demo build at [https://xero.0w.nz](https://xero.0w.nz)
-
-core features are working. actual posts need a bit more formatting. the admin backend works great, test it out locally! project is under active dev, so the demo site may be broken at any time.
+v1.0 of this project is complete! it's now powering my blog at [https://blog.x-e.ro](https://blog.x-e.ro)
 
 ## todo & ideas
 
@@ -71,8 +69,6 @@ core features are working. actual posts need a bit more formatting. the admin ba
 ## background
 
 (i was thinking about calling this project **TNTHUMBS** b/c it's built using: [t](https://typescriptlang.org)ypescript [n](https://nginx.org)ginx [t](https://tailwindcss.com)ailwindcss [h](https://htmx.org)tmx [u](https://unix.org)nix [m](https://mustache.github.io)ustache [b](https://bun.sh)un [s](https://sqlite.org/)qlite)
-
-> please note, i'm doing this project to learn some of these technologies, so i'm undoubtedly doing it wrong in a lot of places. suggestions & pr's are always welcome.
 
 # references
 
